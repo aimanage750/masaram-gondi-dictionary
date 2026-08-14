@@ -1,0 +1,10 @@
+GitHub repo About (paste these on the repo page → ⚙️ next to About):
+
+Website:
+https://masaram-gondi-dictionary.vercel.app/
+
+Description (short):
+Free Masaram Gondi dictionary — गोंडी शब्द कोश. Search in Masaram Gondi script, Gondi Pronunciation, Hindi and English. Created by Saiyyam Ji. Live: https://masaram-gondi-dictionary.vercel.app/
+
+Topics:
+gondi, masaram-gondi, dictionary, hindi, unicode, nextjs, india
