@@ -1,8 +1,7 @@
 "use client";
 
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense } from "react";
 
 function LoginForm() {
   const [email, setEmail] = useState("");
@@ -28,16 +27,21 @@ function LoginForm() {
       body: JSON.stringify({ email, password, csrf }),
     });
     const data = await res.json();
-    if (!res.ok) setErr(data.error ?? "Login failed");
+    if (!res.ok) setErr(data.error === "Invalid credentials" ? "ईमेल या पासवर्ड गलत। Vercel में ADMIN_EMAIL / ADMIN_PASSWORD सेट करें।" : data.error ?? "लॉगिन नहीं हुआ");
     else router.push(next);
   }
 
   return (
     <div className="mx-auto flex min-h-[80vh] max-w-md items-center px-4">
       <form onSubmit={onSubmit} className="gond-frame w-full rounded-3xl bg-cream-50 p-8">
-        <h1 className="font-display text-2xl">Admin sign in</h1>
-        <p className="mt-1 text-sm text-ink-700/70">
-          Email verification is required on Supabase. Local demo uses ADMIN_EMAIL / ADMIN_PASSWORD.
+        <h1 className="font-display text-2xl">एडमिन लॉगिन</h1>
+        <p className="mt-1 font-deva text-sm text-ink-700/80">
+          किताब के पन्ने स्कैन करने, शब्द जोड़ने और साइट नियंत्रित करने के लिए।
+        </p>
+        <p className="mt-2 text-xs text-ink-700/60">
+          लाइव साइट: Vercel → Project → Settings → Environment Variables में{" "}
+          <code>ADMIN_EMAIL</code>, <code>ADMIN_PASSWORD</code>, <code>ADMIN_SESSION_SECRET</code> डालें,
+          फिर Redeploy करें।
         </p>
         <label className="mt-6 block text-sm">
           Email
@@ -50,7 +54,7 @@ function LoginForm() {
           />
         </label>
         <label className="mt-3 block text-sm">
-          Password
+          Password (कम से कम 8 अक्षर)
           <input
             type="password"
             required
@@ -62,7 +66,7 @@ function LoginForm() {
         </label>
         {err && <p className="mt-3 text-sm text-terracotta-600">{err}</p>}
         <button className="mt-6 w-full rounded-xl bg-terracotta-500 py-2.5 text-cream-50">
-          Sign in
+          अंदर जाएँ
         </button>
       </form>
     </div>

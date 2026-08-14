@@ -2,6 +2,16 @@ import Link from "next/link";
 import { getSessionUser } from "@/lib/auth";
 import { redirect } from "next/navigation";
 
+const NAV = [
+  { href: "/admin", label: "डैशबोर्ड" },
+  { href: "/admin/scan", label: "किताब स्कैन" },
+  { href: "/admin/entries", label: "सभी शब्द" },
+  { href: "/admin/entries/new", label: "एक शब्द जोड़ें" },
+  { href: "/admin/import", label: "CSV" },
+  { href: "/admin/contributions", label: "सुझाव" },
+  { href: "/admin/audit", label: "ऑडिट" },
+];
+
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const user = await getSessionUser();
   if (!user || (user.role !== "admin" && user.role !== "contributor")) {
@@ -14,30 +24,23 @@ export default async function AdminLayout({ children }: { children: React.ReactN
         <p className="font-display text-lg">Admin</p>
         <p className="mt-1 truncate text-xs text-cream-200">{user.email}</p>
         <nav className="mt-6 flex flex-col gap-1 text-sm">
-          <Link className="rounded-lg px-2 py-1.5 hover:bg-forest-600" href="/admin">
-            Dashboard
-          </Link>
-          <Link className="rounded-lg px-2 py-1.5 hover:bg-forest-600" href="/admin/entries">
-            Entries
-          </Link>
-          <Link className="rounded-lg px-2 py-1.5 hover:bg-forest-600" href="/admin/import">
-            CSV import
-          </Link>
-          <Link className="rounded-lg px-2 py-1.5 hover:bg-forest-600" href="/admin/contributions">
-            Contributions
-          </Link>
-          <Link className="rounded-lg px-2 py-1.5 hover:bg-forest-600" href="/admin/audit">
-            Audit log
-          </Link>
+          {NAV.map((n) => (
+            <Link key={n.href} className="rounded-lg px-2 py-1.5 hover:bg-forest-600" href={n.href}>
+              {n.label}
+            </Link>
+          ))}
           <Link className="mt-6 rounded-lg px-2 py-1.5 hover:bg-forest-600" href="/">
-            ← Public site
+            ← सार्वजनिक साइट
           </Link>
         </nav>
       </aside>
       <div className="md:pl-56">
-        <header className="flex items-center justify-between border-b border-terracotta-500/20 bg-cream-50 px-4 py-3 md:hidden">
-          <span className="font-display">Admin</span>
-          <Link href="/admin/entries">Entries</Link>
+        <header className="sticky top-0 z-20 flex gap-2 overflow-x-auto border-b border-terracotta-500/20 bg-cream-50 px-3 py-2 text-sm md:hidden">
+          {NAV.map((n) => (
+            <Link key={n.href} href={n.href} className="shrink-0 rounded-full bg-cream-200 px-3 py-1">
+              {n.label}
+            </Link>
+          ))}
         </header>
         <div className="p-4 md:p-8">{children}</div>
       </div>

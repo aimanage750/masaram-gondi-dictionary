@@ -17,15 +17,24 @@ export default async function AdminHome() {
 
   return (
     <div>
-      <h1 className="font-display text-3xl">Dashboard</h1>
+      <h1 className="font-display text-3xl">एडमिन नियंत्रण</h1>
       <div className="mt-6 grid gap-4 sm:grid-cols-3">
-        <Stat label="Published entries" value={published} />
-        <Stat label="Pending contributions" value={pending} />
-        <Stat label="Audit events" value={audit.length} />
+        <Stat label="प्रकाशित शब्द" value={published} />
+        <Stat label="लंबित सुझाव" value={pending} />
+        <Stat label="ऑडिट" value={audit.length} />
       </div>
-      <p className="mt-8 max-w-xl text-sm text-ink-700/80">
-        Gondi pronunciation is never silently rewritten. Hindi/English may receive obvious
-        spelling fixes. New Gondi words require a source.
+      <div className="mt-8 grid gap-3 sm:grid-cols-2">
+        <a href="/admin/scan" className="gond-frame rounded-2xl bg-terracotta-500 p-5 text-cream-50">
+          <p className="font-display text-xl">किताब स्कैन</p>
+          <p className="mt-1 text-sm text-cream-100">पन्ने की फोटो → जाँच → सेव</p>
+        </a>
+        <a href="/admin/entries/new" className="gond-frame rounded-2xl bg-white p-5">
+          <p className="font-display text-xl text-forest-600">एक शब्द लिखें</p>
+          <p className="mt-1 text-sm text-ink-700">फोटो के बिना हाथ से जोड़ें</p>
+        </a>
+      </div>
+      <p className="mt-8 max-w-xl font-deva text-sm text-ink-700/80">
+        गोंडी उच्चारण किताब जैसा ही रखना है। अनुमान से नया गोंडी शब्द न बनाएँ।
       </p>
     </div>
   );
