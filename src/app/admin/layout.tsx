@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 const NAV = [
   { href: "/admin", label: "डैशबोर्ड" },
   { href: "/admin/scan", label: "किताब स्कैन" },
+  { href: "/admin/vakya", label: "वाक्यांश" },
   { href: "/admin/entries", label: "सभी शब्द" },
   { href: "/admin/entries/new", label: "एक शब्द जोड़ें" },
   { href: "/admin/import", label: "CSV" },

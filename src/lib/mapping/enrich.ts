@@ -1,4 +1,10 @@
-import type { DictionaryEntry, PublicEntry, RawSourceEntry } from "@/lib/types";
+import type {
+  DictionaryEntry,
+  GondiSentence,
+  PublicEntry,
+  PublicSentence,
+  RawSourceEntry,
+} from "@/lib/types";
 import { devanagariToMasaram } from "@/lib/mapping/masaram";
 import { romanizeDevanagari, toTitleRoman } from "@/lib/mapping/romanize";
 
@@ -40,6 +46,39 @@ export function enrichRaw(
     created_at: now,
     updated_at: extras?.updated_at ?? now,
     created_by: extras?.created_by ?? "seed",
+  };
+}
+
+export function enrichSentence(
+  input: { gondi_pronunciation: string; hindi: string; english: string; source_page?: string; source?: string },
+  extras?: Partial<GondiSentence>
+): GondiSentence {
+  const now = extras?.created_at ?? new Date().toISOString();
+  return {
+    id: extras?.id ?? makeId(input.gondi_pronunciation, input.hindi + "::vakya"),
+    gondi_script: extras?.gondi_script ?? devanagariToMasaram(input.gondi_pronunciation),
+    gondi_pronunciation: input.gondi_pronunciation,
+    roman_gondi: extras?.roman_gondi ?? toTitleRoman(input.gondi_pronunciation),
+    roman_hindi: extras?.roman_hindi ?? romanizeDevanagari(input.hindi),
+    hindi: input.hindi,
+    english: input.english,
+    source: extras?.source ?? input.source ?? "admin — book sentence",
+    source_page: input.source_page ?? extras?.source_page ?? null,
+    verified: extras?.verified ?? true,
+    status: extras?.status ?? "published",
+    created_at: now,
+    updated_at: extras?.updated_at ?? now,
+    created_by: extras?.created_by ?? "admin",
+  };
+}
+
+export function toPublicSentence(s: GondiSentence): PublicSentence {
+  return {
+    id: s.id,
+    gondi_script: s.gondi_script,
+    gondi_pronunciation: s.gondi_pronunciation,
+    hindi: s.hindi,
+    english: s.english,
   };
 }
 

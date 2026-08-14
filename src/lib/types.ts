@@ -86,3 +86,29 @@ export interface SessionUser {
   role: UserRole;
   name?: string;
 }
+
+/** A full Gondi sentence. Public UI shows only the 4 standard fields. */
+export interface GondiSentence {
+  id: string;
+  gondi_script: string;
+  gondi_pronunciation: string;
+  roman_gondi: string;
+  roman_hindi: string;
+  hindi: string;
+  english: string;
+  source: string;
+  source_page: string | null;
+  verified: boolean;
+  status: EntryStatus;
+  created_at: string;
+  updated_at: string;
+  created_by: string | null;
+}
+
+export interface PublicSentence {
+  id: string;
+  gondi_script: string;
+  gondi_pronunciation: string;
+  hindi: string;
+  english: string;
+}

@@ -28,9 +28,9 @@ export default async function AdminHome() {
           <p className="font-display text-xl">किताब स्कैन</p>
           <p className="mt-1 text-sm text-cream-100">पन्ने की फोटो → जाँच → सेव</p>
         </a>
-        <a href="/admin/entries/new" className="gond-frame rounded-2xl bg-white p-5">
-          <p className="font-display text-xl text-forest-600">एक शब्द लिखें</p>
-          <p className="mt-1 text-sm text-ink-700">फोटो के बिना हाथ से जोड़ें</p>
+        <a href="/admin/vakya" className="gond-frame rounded-2xl bg-white p-5">
+          <p className="font-display text-xl text-forest-600">वाक्यांश + PDF</p>
+          <p className="mt-1 text-sm text-ink-700">किताब का PDF / फोटो देखकर वाक्य जोड़ें</p>
         </a>
       </div>
       <p className="mt-8 max-w-xl font-deva text-sm text-ink-700/80">

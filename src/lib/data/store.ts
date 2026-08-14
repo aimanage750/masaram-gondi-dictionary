@@ -1,6 +1,6 @@
 import { promises as fs } from "fs";
 import path from "path";
-import type { AuditEvent, DictionaryEntry } from "@/lib/types";
+import type { AuditEvent, DictionaryEntry, GondiSentence } from "@/lib/types";
 import { RAW_ENTRIES } from "@/data/raw-entries";
 import { enrichRaw } from "@/lib/mapping/enrich";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
@@ -11,6 +11,7 @@ const DB_FILE = path.join(DATA_DIR, "runtime-db.json");
 
 export interface LocalDB {
   entries: DictionaryEntry[];
+  sentences: GondiSentence[];
   contributions: Array<
     DictionaryEntry & {
       contributor_name?: string;
@@ -30,15 +31,16 @@ async function readLocal(): Promise<LocalDB> {
     const raw = await fs.readFile(DB_FILE, "utf8");
     const parsed = JSON.parse(raw) as LocalDB;
     if (!Array.isArray(parsed.entries) || parsed.entries.length === 0) {
-      return { entries: seedEntries(), contributions: [], audit: [] };
+      return { entries: seedEntries(), sentences: parsed.sentences ?? [], contributions: [], audit: [] };
     }
     return {
       entries: parsed.entries,
+      sentences: parsed.sentences ?? [],
       contributions: parsed.contributions ?? [],
       audit: parsed.audit ?? [],
     };
   } catch {
-    return { entries: seedEntries(), contributions: [], audit: [] };
+    return { entries: seedEntries(), sentences: [], contributions: [], audit: [] };
   }
 }
 
@@ -215,6 +217,67 @@ async function writeAudit(
     entity_id,
     detail,
   });
+}
+
+export async function listSentences(includeUnpublished = false): Promise<GondiSentence[]> {
+  if (isSupabaseConfigured()) {
+    const sb = createServiceClient();
+    let q = sb.from("sentences").select("*").order("created_at", { ascending: false });
+    if (!includeUnpublished) q = q.eq("status", "published");
+    const { data, error } = await q;
+    if (error) throw error;
+    return (data ?? []) as GondiSentence[];
+  }
+  const db = await readLocal();
+  return (db.sentences ?? []).filter((s) => includeUnpublished || s.status === "published");
+}
+
+export async function upsertSentence(sentence: GondiSentence, actor: string) {
+  if (isSupabaseConfigured()) {
+    const sb = createServiceClient();
+    const { error } = await sb.from("sentences").upsert(sentence);
+    if (error) throw error;
+    await writeAudit(actor, sentence.id ? "update" : "create", "sentence", sentence.id, sentence.gondi_pronunciation.slice(0, 80));
+    return sentence;
+  }
+  const db = await readLocal();
+  db.sentences = db.sentences ?? [];
+  const i = db.sentences.findIndex((s) => s.id === sentence.id);
+  if (i >= 0) db.sentences[i] = { ...sentence, updated_at: new Date().toISOString() };
+  else db.sentences.push(sentence);
+  db.audit.unshift({
+    id: `aud_${Date.now()}`,
+    actor,
+    action: i >= 0 ? "update" : "create",
+    entity_type: "sentence",
+    entity_id: sentence.id,
+    detail: sentence.gondi_pronunciation.slice(0, 80),
+    created_at: new Date().toISOString(),
+  });
+  await writeLocal(db);
+  return sentence;
+}
+
+export async function deleteSentence(id: string, actor: string) {
+  if (isSupabaseConfigured()) {
+    const sb = createServiceClient();
+    const { error } = await sb.from("sentences").delete().eq("id", id);
+    if (error) throw error;
+    await writeAudit(actor, "delete", "sentence", id, "");
+    return;
+  }
+  const db = await readLocal();
+  db.sentences = (db.sentences ?? []).filter((s) => s.id !== id);
+  db.audit.unshift({
+    id: `aud_${Date.now()}`,
+    actor,
+    action: "delete",
+    entity_type: "sentence",
+    entity_id: id,
+    detail: "",
+    created_at: new Date().toISOString(),
+  });
+  await writeLocal(db);
 }
 
 export { seedEntries };

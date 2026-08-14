@@ -34,6 +34,14 @@ export const entrySchema = z.object({
   verified: z.boolean().optional(),
 });
 
+export const sentenceSchema = z.object({
+  gondi_pronunciation: z.string().trim().min(1).max(400),
+  hindi: z.string().trim().min(1).max(400),
+  english: z.string().trim().min(1).max(400),
+  source_page: z.string().trim().max(20).optional(),
+  csrf: z.string().optional(),
+});
+
 export const contributionSchema = z.object({
   gondi_pronunciation: z.string().trim().min(1).max(200),
   hindi: z.string().trim().min(1).max(200),

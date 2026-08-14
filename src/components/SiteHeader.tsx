@@ -6,11 +6,12 @@ import { useState } from "react";
 import { Menu, X } from "lucide-react";
 
 const NAV = [
-  { href: "/", label: "Search" },
-  { href: "/browse", label: "Browse" },
-  { href: "/keyboard", label: "Keyboard" },
-  { href: "/contribute", label: "Contribute" },
-  { href: "/about", label: "About" },
+  { href: "/", label: "खोज" },
+  { href: "/browse", label: "श्रेणी" },
+  { href: "/vakya", label: "वाक्यांश" },
+  { href: "/keyboard", label: "कीबोर्ड" },
+  { href: "/contribute", label: "योगदान" },
+  { href: "/about", label: "परिचय" },
 ];
 
 export function SiteHeader() {
@@ -38,7 +39,7 @@ export function SiteHeader() {
               key={n.href}
               href={n.href}
               className={`rounded-full px-3 py-1.5 text-sm ${
-                path === n.href
+                path === n.href || (n.href !== "/" && path.startsWith(n.href))
                   ? "bg-forest-500 text-cream-50"
                   : "text-ink-700 hover:bg-cream-200"
               }`}
