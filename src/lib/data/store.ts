@@ -1,54 +1,24 @@
-import { promises as fs } from "fs";
-import path from "path";
-import type { AuditEvent, DictionaryEntry, GondiSentence } from "@/lib/types";
+import type { DictionaryEntry, GondiSentence } from "@/lib/types";
 import { RAW_ENTRIES } from "@/data/raw-entries";
 import { enrichRaw } from "@/lib/mapping/enrich";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
 import { createServiceClient } from "@/lib/supabase/service";
+import { type LocalDB, readPersisted, writePersisted } from "@/lib/data/persist";
 
-const DATA_DIR = path.join(process.cwd(), "data");
-const DB_FILE = path.join(DATA_DIR, "runtime-db.json");
-
-export interface LocalDB {
-  entries: DictionaryEntry[];
-  sentences: GondiSentence[];
-  contributions: Array<
-    DictionaryEntry & {
-      contributor_name?: string;
-      contributor_email?: string;
-      review_status: "pending" | "approved" | "rejected";
-    }
-  >;
-  audit: AuditEvent[];
-}
+export type { LocalDB };
 
 function seedEntries(): DictionaryEntry[] {
   return RAW_ENTRIES.map((r) => enrichRaw(r, { verified: true, status: "published" }));
 }
 
 async function readLocal(): Promise<LocalDB> {
-  try {
-    const raw = await fs.readFile(DB_FILE, "utf8");
-    const parsed = JSON.parse(raw) as LocalDB;
-    if (!Array.isArray(parsed.entries) || parsed.entries.length === 0) {
-      return { entries: seedEntries(), sentences: parsed.sentences ?? [], contributions: [], audit: [] };
-    }
-    return {
-      entries: parsed.entries,
-      sentences: parsed.sentences ?? [],
-      contributions: parsed.contributions ?? [],
-      audit: parsed.audit ?? [],
-    };
-  } catch {
-    return { entries: seedEntries(), sentences: [], contributions: [], audit: [] };
-  }
+  const persisted = await readPersisted();
+  if (persisted && persisted.entries.length > 0) return persisted;
+  return { entries: seedEntries(), sentences: persisted?.sentences ?? [], contributions: [], audit: [] };
 }
 
 async function writeLocal(db: LocalDB) {
-  await fs.mkdir(DATA_DIR, { recursive: true });
-  const tmp = `${DB_FILE}.${process.pid}.tmp`;
-  await fs.writeFile(tmp, JSON.stringify(db, null, 2), "utf8");
-  await fs.rename(tmp, DB_FILE);
+  await writePersisted(db);
 }
 
 export async function listEntries(opts?: {

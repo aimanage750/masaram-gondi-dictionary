@@ -6,7 +6,7 @@ export async function GET() {
   const token = randomToken(16);
   cookies().set("mgd_csrf", token, {
     httpOnly: true,
-    sameSite: "strict",
+    sameSite: "lax",
     secure: process.env.NODE_ENV === "production",
     path: "/",
     maxAge: 60 * 60,

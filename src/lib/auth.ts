@@ -38,7 +38,7 @@ export function localSessionCookie(email: string) {
     value: signValue(email, 1000 * 60 * 60 * 12),
     options: {
       httpOnly: true,
-      sameSite: "strict" as const,
+      sameSite: "lax" as const,
       secure: process.env.NODE_ENV === "production",
       path: "/",
       maxAge: 60 * 60 * 12,

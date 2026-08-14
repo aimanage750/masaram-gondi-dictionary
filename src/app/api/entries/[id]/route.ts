@@ -13,7 +13,14 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
   if (!existing) return NextResponse.json({ error: "Not found" }, { status: 404 });
   const body = await req.json().catch(() => ({}));
   const parsed = entrySchema.safeParse(body);
-  if (!parsed.success) return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
+  if (!parsed.success) {
+    const flat = parsed.error.flatten();
+    const msg =
+      Object.values(flat.fieldErrors).flat().filter(Boolean)[0] ||
+      flat.formErrors[0] ||
+      "गोंडी, हिन्दी और English चाहिए";
+    return NextResponse.json({ error: msg }, { status: 400 });
+  }
   try {
     assertCsrf(body.csrf);
     rejectDangerous(parsed.data.gondi_pronunciation, "Gondi");
@@ -38,7 +45,11 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
       verified: parsed.data.verified ?? existing.verified,
     }
   );
-  await upsertEntry(entry, user.email);
+  try {
+    await upsertEntry(entry, user.email);
+  } catch (e) {
+    return NextResponse.json({ error: (e as Error).message || "सेव नहीं हुआ" }, { status: 500 });
+  }
   return NextResponse.json({ id: entry.id });
 }
 
@@ -51,6 +62,10 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
   } catch (e) {
     return NextResponse.json({ error: (e as Error).message }, { status: 403 });
   }
-  await deleteEntry(params.id, user.email);
+  try {
+    await deleteEntry(params.id, user.email);
+  } catch (e) {
+    return NextResponse.json({ error: (e as Error).message || "डिलीट नहीं हुआ" }, { status: 500 });
+  }
   return NextResponse.json({ ok: true });
 }

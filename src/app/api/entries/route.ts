@@ -9,11 +9,18 @@ import { CATEGORY_META } from "@/data/raw-entries";
 export async function POST(req: NextRequest) {
   const user = await getSessionUser();
   if (!user || user.role !== "admin") {
-    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    return NextResponse.json({ error: "Forbidden — एडमिन लॉगिन करो" }, { status: 403 });
   }
   const body = await req.json().catch(() => ({}));
   const parsed = entrySchema.safeParse(body);
-  if (!parsed.success) return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
+  if (!parsed.success) {
+    const flat = parsed.error.flatten();
+    const msg =
+      Object.values(flat.fieldErrors).flat().filter(Boolean)[0] ||
+      flat.formErrors[0] ||
+      "गोंडी, हिन्दी और English चाहिए";
+    return NextResponse.json({ error: msg }, { status: 400 });
+  }
   try {
     assertCsrf(body.csrf);
     rejectDangerous(parsed.data.gondi_pronunciation, "Gondi");
@@ -37,6 +44,10 @@ export async function POST(req: NextRequest) {
       created_by: user.id,
     }
   );
-  await upsertEntry(entry, user.email);
+  try {
+    await upsertEntry(entry, user.email);
+  } catch (e) {
+    return NextResponse.json({ error: (e as Error).message || "सेव नहीं हुआ" }, { status: 500 });
+  }
   return NextResponse.json({ id: entry.id });
 }

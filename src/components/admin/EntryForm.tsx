@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import type { DictionaryEntry } from "@/lib/types";
 import { devanagariToMasaram } from "@/lib/mapping/masaram";
 import { CATEGORY_META } from "@/data/raw-entries";
+import { publicError } from "@/lib/api-error";
 
 export function EntryForm({ entry }: { entry?: DictionaryEntry }) {
   const router = useRouter();
@@ -15,44 +16,93 @@ export function EntryForm({ entry }: { entry?: DictionaryEntry }) {
   const [category, setCategory] = useState(entry?.category ?? "general");
   const [notes, setNotes] = useState(entry?.notes ?? "");
   const [err, setErr] = useState<string | null>(null);
+  const [ok, setOk] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
   const mapped = devanagariToMasaram(gondi);
 
   useEffect(() => {
-    fetch("/api/csrf")
+    fetch("/api/csrf", { credentials: "same-origin" })
       .then((r) => r.json())
-      .then((d) => setCsrf(d.token))
-      .catch(() => {});
+      .then((d) => setCsrf(d.token ?? ""))
+      .catch(() => setErr("सुरक्षा टोकन नहीं मिला। पेज रीफ्रेश करो।"));
   }, []);
+
+  async function readBody(res: Response) {
+    const text = await res.text();
+    try {
+      return text ? JSON.parse(text) : {};
+    } catch {
+      return { error: text.slice(0, 200) || `HTTP ${res.status}` };
+    }
+  }
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
     setErr(null);
-    const res = await fetch(entry ? `/api/entries/${entry.id}` : "/api/entries", {
-      method: entry ? "PUT" : "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        gondi_pronunciation: gondi,
-        hindi,
-        english,
-        category,
-        notes,
-        csrf,
-        status: "published",
-      }),
-    });
-    const data = await res.json();
-    if (!res.ok) setErr(data.error ?? "Save failed");
-    else router.push("/admin/entries");
+    setOk(null);
+    if (!csrf) {
+      setErr("सुरक्षा टोकन अभी लोड नहीं हुआ। एक सेकंड बाद फिर सेव दबाओ।");
+      return;
+    }
+    setBusy(true);
+    try {
+      const res = await fetch(entry ? `/api/entries/${entry.id}` : "/api/entries", {
+        method: entry ? "PUT" : "POST",
+        credentials: "same-origin",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          gondi_pronunciation: gondi,
+          hindi,
+          english,
+          category,
+          notes,
+          csrf,
+          status: "published",
+        }),
+      });
+      const data = await readBody(res);
+      if (!res.ok) {
+        setErr(publicError(data.error ?? data, "सेव नहीं हुआ"));
+        return;
+      }
+      setOk("सेव हो गया।");
+      router.push("/admin/entries");
+      router.refresh();
+    } catch (e) {
+      setErr(publicError(e, "नेटवर्क त्रुटि — सेव नहीं हुआ"));
+    } finally {
+      setBusy(false);
+    }
   }
 
   async function onDelete() {
-    if (!entry || !confirm("Delete this entry?")) return;
-    await fetch(`/api/entries/${entry.id}`, {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ csrf }),
-    });
-    router.push("/admin/entries");
+    if (!entry || !confirm("यह शब्द हटाएँ?")) return;
+    setErr(null);
+    setOk(null);
+    if (!csrf) {
+      setErr("सुरक्षा टोकन अभी लोड नहीं हुआ। पेज रीफ्रेश करो।");
+      return;
+    }
+    setBusy(true);
+    try {
+      const res = await fetch(`/api/entries/${entry.id}`, {
+        method: "DELETE",
+        credentials: "same-origin",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ csrf }),
+      });
+      const data = await readBody(res);
+      if (!res.ok) {
+        setErr(publicError(data.error ?? data, "डिलीट नहीं हुआ"));
+        return;
+      }
+      router.push("/admin/entries");
+      router.refresh();
+    } catch (e) {
+      setErr(publicError(e, "डिलीट नहीं हुआ"));
+    } finally {
+      setBusy(false);
+    }
   }
 
   return (
@@ -93,10 +143,13 @@ export function EntryForm({ entry }: { entry?: DictionaryEntry }) {
         <textarea value={notes} onChange={(e) => setNotes(e.target.value)} className="mt-1 w-full rounded-xl border px-3 py-2" />
       </label>
       {err && <p className="text-sm text-terracotta-600">{err}</p>}
+      {ok && <p className="text-sm text-forest-600">{ok}</p>}
       <div className="flex gap-2">
-        <button className="rounded-xl bg-forest-500 px-4 py-2 text-cream-50">Save</button>
+        <button type="submit" disabled={busy || !csrf} className="rounded-xl bg-forest-500 px-4 py-2 text-cream-50 disabled:opacity-50">
+          {busy ? "सेव हो रहा है…" : "Save"}
+        </button>
         {entry && (
-          <button type="button" onClick={onDelete} className="rounded-xl border border-terracotta-500 px-4 py-2 text-terracotta-600">
+          <button type="button" disabled={busy || !csrf} onClick={onDelete} className="rounded-xl border border-terracotta-500 px-4 py-2 text-terracotta-600 disabled:opacity-50">
             Delete
           </button>
         )}
