@@ -32,6 +32,18 @@ export default async function HomePage({
         <div className="mt-6 text-left">
           <SearchBar initial={q} autoFocus />
         </div>
+        {!q && (
+          <div className="mt-6 grid grid-cols-2 gap-3 text-left">
+            <Link href="/browse" className="gond-frame rounded-2xl bg-white/80 p-4">
+              <span className="block font-display text-lg text-forest-600">श्रेणी</span>
+              <span className="font-deva text-sm text-ink-700">शब्द विषय से</span>
+            </Link>
+            <Link href="/vakya" className="gond-frame rounded-2xl bg-white/80 p-4">
+              <span className="block font-display text-lg text-terracotta-600">वाक्यांश</span>
+              <span className="font-deva text-sm text-ink-700">गोंडी वाक्य · जल्द</span>
+            </Link>
+          </div>
+        )}
         <p className="mt-3 text-xs text-ink-700/60">
           Try <em>तल्ला</em>, <em>Talla</em>, <em>सिर</em>, <em>Head</em> or{" "}
           <span className="font-gondi">𑴛𑴧𑵅𑴧𑴱</span>
