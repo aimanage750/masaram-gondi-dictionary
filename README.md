@@ -1,34 +1,39 @@
-# Masaram Gondi Dictionary
-
-Production-grade dictionary for the **Masaram Gondi** script (Unicode `U+11D00–U+11D5F`).
+# Masaram Gondi Dictionary · गोंडी शब्द कोश
 
 Created by **Saiyyam Ji**.
 
-## Public result (always 4 fields)
+Masaram Gondi script dictionary (Unicode `U+11D00–U+11D5F`).  
+Search in Gondi pronunciation, Roman Gondi, Hindi, English, or Masaram Gondi.
+
+**Public result is always 4 fields only:**
 
 1. Masaram Gondi  
 2. Gondi Pronunciation  
 3. Hindi  
 4. English  
 
-Roman Gondi / Roman Hindi are **internal search fields only**.
+Roman Gondi / Roman Hindi are internal search fields — never shown.
 
-Search accepts all of: `तल्ला` · `Talla` · `talla` · `TALLA` · `sir` · `सिर` · `Head` · `𑴛𑴧𑵅𑴧𑴱`
+Try: `तल्ला` · `Talla` · `sir` · `सिर` · `Head` · `𑴛𑴧𑵅𑴧𑴱`
 
-## Source rule
+---
 
-Uploaded PDFs (`गोंडी करीयाट (गोंडी सिखाएं)` 2–5) are the **primary source**.  
-Gondi pronunciation is never invented and never silently respelt.  
-Hindi/English only receive obvious spelling fixes (e.g. Beared → Beard).
+## मुफ्त लाइव डिप्लॉय (GitHub + Vercel)
 
-## Stack
+पूरी गाइड: **[DEPLOY.md](./DEPLOY.md)** — हिंदी में, स्टेप-बाय-स्टेप।
 
-- Next.js 14 App Router · React · Tailwind CSS
-- Supabase (Postgres + Auth + Storage) when env is set
-- Local JSON store + demo admin when Supabase is not configured
-- PWA (offline cache of the public dictionary)
+छोटा रास्ता:
 
-## Quick start
+1. GitHub पर पब्लिक रिपो बनाएँ: `masaram-gondi-dictionary`
+2. यह कोड `git push` करें
+3. [vercel.com](https://vercel.com/signup) → **Continue with GitHub** → Import → **Deploy**
+
+फ्री URL मिलेगा: `https://….vercel.app`  
+Supabase के बिना भी डिक्शनरी चलती है।
+
+---
+
+## Local run
 
 ```bash
 cp .env.example .env.local
@@ -36,50 +41,19 @@ npm install
 npm run dev
 ```
 
-Demo admin (local mode only):
+Open [http://localhost:3000](http://localhost:3000).
 
-- Email: `admin@localhost`
-- Password: `ChangeMeNow1`  ← change immediately
+## Source rule
 
-## Supabase
+Primary source: uploaded *गोंडी करीयाट (गोंडी सिखाएं)* PDFs.  
+Gondi pronunciation is never invented and never silently respelt.
 
-1. Create a project. Enable **email confirmation** for Auth.  
-2. Put `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` in `.env.local`.  
-3. Put `SUPABASE_SERVICE_ROLE_KEY` **only** in server env — never `NEXT_PUBLIC_`.  
-4. Run in order:
+## Stack
 
-```
-supabase/migrations/0001_schema.sql
-supabase/migrations/0002_rls.sql
-```
+Next.js 14 · Tailwind · optional Supabase · PWA
 
-RLS is **default deny**. Policies:
+SQL: `supabase/migrations/0001` … `0006` then `supabase/seed.sql`
 
-- public: `select` published entries only  
-- contributor: `insert` pending rows they own  
-- admin: full access  
-- `rate_limits` / service-role tables: no anon policies  
+## License
 
-## Security checklist
-
-- [x] RLS SQL for every table  
-- [x] service_role never shipped to the browser  
-- [x] `/admin/*` gated by middleware + server session  
-- [x] Zod validation + script-injection / path-traversal rejects  
-- [x] Rate limits on search, login, contribute, import  
-- [x] CSRF cookie on admin + contribution POSTs  
-- [x] CSP + security headers  
-- [x] Audio MIME / size / filename checks, private storage + signed URLs  
-- [x] `.env` not committed (`.env.example` only)  
-- [x] Audit log for admin writes  
-
-## Mapping
-
-Devanagari Gondi pronunciation is converted to real Masaram Gondi code points  
-(not a font swap). Example:
-
-`तल्ला` → `𑴛𑴧𑵅𑴧𑴱`
-
-## Deploy (Vercel)
-
-Set the same env vars. HTTPS is enforced by Vercel. Confirm no mixed-content URLs.
+MIT © Saiyyam Ji
