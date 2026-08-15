@@ -24,7 +24,7 @@ export function ConverterControls({
     "disabled:cursor-not-allowed disabled:opacity-45 sm:w-auto";
 
   return (
-    <div className="mt-5 grid grid-cols-1 gap-2.5 border-t border-earth-500/10 pt-4 sm:flex sm:flex-wrap sm:items-center">
+    <div className="flex flex-wrap items-center gap-2.5">
       <button
         type="button"
         onClick={onCopy}

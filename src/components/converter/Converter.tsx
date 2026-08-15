@@ -185,13 +185,19 @@ export function Converter() {
             direction={direction}
             unmapped={unmapped}
           />
+        </div>
+      </div>
+
+      {/* Action bar — own card, never crowds the panels above/below */}
+      <div className="mt-5 rounded-2xl border border-earth-500/10 bg-white p-4 shadow-card md:px-5">
+        <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
           <ConverterControls
             onCopy={handleCopy}
             onDownload={handleDownload}
             onShare={handleShare}
             hasOutput={output.length > 0}
           />
-          <p className="mt-3 text-xs leading-relaxed text-ink-700/70">
+          <p className="text-xs leading-relaxed text-ink-700/70 xl:max-w-md xl:text-right">
             नमस्ते = न म स् त े → विराम सहित{" "}
             <span className="font-gondi text-sm">{devanagariToMasaram("नमस्ते")}</span> · क्षेत्र ={" "}
             <span className="font-gondi text-sm">{devanagariToMasaram("क्षेत्र")}</span>
