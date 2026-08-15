@@ -49,18 +49,18 @@ export default async function VakyaPage() {
               <dl className="mt-4 space-y-2 text-sm">
                 <div>
                   <dt className="text-ink-700/60">Gondi Pronunciation</dt>
-                  <dd className="flex flex-wrap items-center gap-2 font-deva text-xl">
+                  <dd className="flex flex-wrap items-center gap-2 font-deva text-xl text-ink-800">
                     {s.gondi_pronunciation}
                     <SpeakButton text={s.gondi_pronunciation} />
                   </dd>
                 </div>
                 <div>
                   <dt className="text-ink-700/60">Hindi</dt>
-                  <dd className="font-deva text-lg">{s.hindi}</dd>
+                  <dd className="font-deva text-lg text-ink-800">{s.hindi}</dd>
                 </div>
                 <div>
                   <dt className="text-ink-700/60">English</dt>
-                  <dd className="text-lg">{s.english}</dd>
+                  <dd className="text-lg text-ink-800">{s.english}</dd>
                 </div>
               </dl>
             </li>

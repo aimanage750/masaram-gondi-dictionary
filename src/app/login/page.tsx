@@ -33,8 +33,8 @@ function LoginForm() {
 
   return (
     <div className="mx-auto flex min-h-[80vh] max-w-md items-center px-4">
-      <form onSubmit={onSubmit} className="gond-frame w-full rounded-3xl bg-cream-50 p-8">
-        <h1 className="font-display text-2xl">एडमिन लॉगिन</h1>
+      <form onSubmit={onSubmit} className="gond-frame w-full rounded-3xl bg-cream-50 p-8 text-ink-800">
+        <h1 className="font-display text-2xl text-ink-800">एडमिन लॉगिन</h1>
         <p className="mt-1 font-deva text-sm text-ink-700/80">
           किताब के पन्ने स्कैन करने, शब्द जोड़ने और साइट नियंत्रित करने के लिए।
         </p>
@@ -50,7 +50,7 @@ function LoginForm() {
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="mt-1 w-full rounded-xl border border-terracotta-500/30 px-3 py-2"
+            className="mt-1 w-full rounded-xl border border-terracotta-500/30 bg-white px-3 py-2 text-ink-800"
           />
         </label>
         <label className="mt-3 block text-sm">
@@ -61,7 +61,7 @@ function LoginForm() {
             minLength={8}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="mt-1 w-full rounded-xl border border-terracotta-500/30 px-3 py-2"
+            className="mt-1 w-full rounded-xl border border-terracotta-500/30 bg-white px-3 py-2 text-ink-800"
           />
         </label>
         {err && <p className="mt-3 text-sm text-terracotta-600">{err}</p>}

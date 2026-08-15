@@ -21,15 +21,15 @@ export default async function WordPage({ params }: { params: { id: string } }) {
         <GondiScript text={entry.gondi_script} className="mt-2 block text-5xl text-forest-600 md:text-6xl" />
 
         <Field label="Gondi Pronunciation">
-          <span className="font-deva text-2xl">{entry.gondi_pronunciation}</span>
+          <span className="font-deva text-2xl text-ink-800">{entry.gondi_pronunciation}</span>
           <SpeakButton text={entry.gondi_pronunciation} />
         </Field>
         <Field label="Hindi">
-          <span className="font-deva text-2xl">{entry.hindi}</span>
+          <span className="font-deva text-2xl text-ink-800">{entry.hindi}</span>
           <SpeakButton text={entry.hindi} />
         </Field>
         <Field label="English">
-          <span className="text-2xl">{entry.english}</span>
+          <span className="text-2xl text-ink-800">{entry.english}</span>
           <SpeakButton text={entry.english} lang="en-IN" />
         </Field>
 

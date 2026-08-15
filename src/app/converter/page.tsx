@@ -53,7 +53,7 @@ function MapTable({ title, rows }: { title: string; rows: MapRow[] }) {
           <tbody>
             {rows.map((r) => (
               <tr key={`${r.gondi}-${r.cp}`} className="odd:bg-white/50">
-                <td className="border-b border-ink-800/10 px-2 py-1.5 font-deva">{r.deva}</td>
+                <td className="border-b border-ink-800/10 px-2 py-1.5 font-deva text-ink-800">{r.deva}</td>
                 <td className="border-b border-ink-800/10 px-2 py-1.5 font-gondi text-2xl text-terracotta-700">
                   {r.gondi}
                 </td>

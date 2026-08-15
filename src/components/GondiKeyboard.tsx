@@ -54,7 +54,7 @@ export function GondiKeyboard({
         <button
           type="button"
           onClick={() => push(" ")}
-          className="flex flex-1 items-center justify-center gap-1 rounded-lg bg-cream-200 py-2 text-sm"
+          className="flex flex-1 items-center justify-center gap-1 rounded-lg bg-cream-200 py-2 text-sm text-ink-800"
         >
           <Space size={14} /> Space
         </button>
@@ -69,7 +69,7 @@ export function GondiKeyboard({
         <button
           type="button"
           onClick={() => onChange("")}
-          className="rounded-lg border border-ink-700/20 px-3 py-2 text-sm"
+          className="rounded-lg border border-ink-700/20 px-3 py-2 text-sm text-ink-800"
         >
           Clear
         </button>

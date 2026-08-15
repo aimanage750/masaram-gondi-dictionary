@@ -20,7 +20,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   }
 
   return (
-    <div className="min-h-screen bg-cream-100">
+    <div className="min-h-screen bg-cream-100 text-ink-800">
       <aside className="fixed inset-y-0 left-0 hidden w-56 border-r border-terracotta-500/20 bg-forest-700 p-4 text-cream-50 md:block">
         <p className="font-display text-lg">Admin</p>
         <p className="mt-1 truncate text-xs text-cream-200">{user.email}</p>

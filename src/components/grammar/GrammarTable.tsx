@@ -7,7 +7,7 @@ function cellClass(cell: Cell): string {
     case "en":
       return "text-ink-700";
     default:
-      return "font-deva text-base";
+      return "font-deva text-base text-ink-800";
   }
 }
 
