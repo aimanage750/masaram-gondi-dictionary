@@ -1,12 +1,12 @@
 {
-  "name": "Masaram Gondi Language Platform",
+  "name": "Masaram Gondi Script Dictionary",
   "short_name": "Gondi कोश",
-  "description": "Masaram Gondi dictionary, script converter, grammar and keyboard",
+  "description": "Masaram Gondi script dictionary, translator, converter, grammar and keyboard",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
-  "background_color": "#101910",
-  "theme_color": "#142418",
+  "background_color": "#F5EBDD",
+  "theme_color": "#123C2A",
   "lang": "hi",
   "icons": [
     {

@@ -92,7 +92,7 @@ export function Converter() {
       <ConverterModeTabs direction={direction} onChange={setDirection} />
 
       <div className="grid gap-4 md:grid-cols-2">
-        <div className="rounded-2xl border border-ochre-500/25 bg-cream-50 p-4 shadow-card md:p-5">
+        <div className="rounded-2xl border border-earth-500/10 bg-white p-4 shadow-card md:p-5">
           <ConverterInput
             value={input}
             onChange={handleInputChange}
@@ -113,7 +113,7 @@ export function Converter() {
           </div>
         </div>
 
-        <div className="rounded-2xl border border-ochre-500/25 bg-cream-50 p-4 shadow-card md:p-5">
+        <div className="rounded-2xl border border-earth-500/10 bg-white p-4 shadow-card md:p-5">
           <ConverterOutput value={output} direction={direction} />
           <ConverterControls
             onCopy={handleCopy}

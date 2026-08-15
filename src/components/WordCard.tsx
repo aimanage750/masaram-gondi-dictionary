@@ -6,7 +6,7 @@ export function WordCard({ entry }: { entry: PublicEntry }) {
   return (
     <Link
       href={`/word/${entry.id}`}
-      className="gond-frame group block rounded-2xl bg-cream-50/90 p-4 transition hover:-translate-y-0.5 hover:border-terracotta-500"
+      className="gond-frame group block rounded-2xl bg-white p-4 transition hover:-translate-y-0.5 hover:border-terracotta-500"
     >
       <GondiScript text={entry.gondi_script} className="text-3xl text-forest-600" />
       <dl className="mt-3 space-y-1 text-sm">

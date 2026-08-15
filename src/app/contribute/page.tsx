@@ -49,11 +49,11 @@ export default function ContributePage() {
 
   return (
     <div className="mx-auto max-w-xl px-4 py-10">
-      <h1 className="font-display text-3xl text-cream-50">Contribute a word · योगदान</h1>
-      <p className="mt-2 font-deva text-cream-200/80">
+      <h1 className="font-display text-3xl font-bold text-forest-600">Contribute a word · योगदान</h1>
+      <p className="mt-2 font-deva text-ink-700">
         केवल वही गोंडी शब्द भेजें जो किसी स्रोत में लिखा हो। अनुमान से शब्द न बनाएँ।
       </p>
-      <form onSubmit={onSubmit} className="mt-6 space-y-4 rounded-3xl border border-ochre-500/25 bg-cream-50 p-5 text-ink-800 shadow-card md:p-6">
+      <form onSubmit={onSubmit} className="mt-6 space-y-4 rounded-3xl border border-earth-500/10 bg-white p-5 text-ink-800 shadow-card md:p-6">
         <label className="block text-sm">
           Gondi Pronunciation
           <input

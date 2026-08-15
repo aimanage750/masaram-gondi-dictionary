@@ -11,8 +11,8 @@ export default function KeyboardPage() {
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-10">
-      <h1 className="font-display text-3xl text-cream-50">Masaram Gondi Keyboard</h1>
-      <p className="mt-2 text-sm text-cream-200/70">
+      <h1 className="font-display text-3xl font-bold text-forest-600">Masaram Gondi Keyboard</h1>
+      <p className="mt-2 text-sm text-ink-700/70">
         Type Devanagari Gondi pronunciation — it maps live to Masaram Gondi Unicode.
       </p>
       <input

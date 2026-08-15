@@ -36,14 +36,14 @@ export function ConverterModeTabs({
             className={`rounded-xl border px-4 py-2.5 text-left transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta-500 ${
               active
                 ? "border-transparent bg-gradient-to-b from-terracotta-400 to-terracotta-500 text-cream-50 shadow-[0_8px_18px_rgba(196,92,38,0.35)]"
-                : "border-ochre-500/30 bg-forest-800/70 text-cream-100/90 hover:border-gold-400/60"
+                : "border-earth-500/15 bg-white text-ink-800 hover:border-terracotta-500/50 hover:bg-cream-100"
             }`}
           >
             <span className="block font-deva text-base font-semibold leading-tight">
               {t.label}
             </span>
             <span
-              className={`block text-[11px] ${active ? "text-cream-100/85" : "text-cream-200/60"}`}
+              className={`block text-[11px] ${active ? "text-cream-100/85" : "text-ink-700/60"}`}
             >
               {t.sub}
             </span>

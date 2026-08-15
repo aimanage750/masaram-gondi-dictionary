@@ -39,7 +39,7 @@ const SPECIALS = SIGNS.filter((r) => !MATRAS.includes(r));
 
 function MapTable({ title, rows }: { title: string; rows: MapRow[] }) {
   return (
-    <div className="rounded-2xl border border-ochre-500/25 bg-cream-50 p-4 shadow-card">
+    <div className="rounded-2xl border border-earth-500/10 bg-white p-4 shadow-card">
       <h3 className="mb-3 font-deva text-lg font-bold text-terracotta-700">{title}</h3>
       <div className="overflow-x-auto">
         <table className="w-full min-w-[320px] border-collapse text-base">
@@ -71,21 +71,21 @@ export default function ConverterPage() {
   return (
     <div className="mx-auto max-w-6xl px-4 py-8 md:py-12">
       <section className="text-center">
-        <p className="text-[11px] uppercase tracking-[0.28em] text-gold-400">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-terracotta-500">
           Munshi Mangal Singh Masaram · 1918 · U+11D00
         </p>
-        <h1 className="mt-3 font-display text-3xl text-cream-50 md:text-4xl">
+        <h1 className="mt-3 font-display text-3xl font-bold text-forest-600 md:text-4xl">
           Masaram Gondi Script Converter
         </h1>
-        <p className="mt-2 font-deva text-lg text-cream-100/90">
+        <p className="mt-2 font-deva text-lg text-terracotta-500">
           हिन्दी ⇄ मसराम गोंडी — दोनों दिशाओं में (Hindi ⇄ Masaram Gondi)
         </p>
-        <p className="mx-auto mt-2 max-w-2xl font-deva text-sm leading-relaxed text-cream-200/80">
+        <p className="mx-auto mt-2 max-w-2xl font-deva text-sm leading-relaxed text-ink-700">
           हिन्दी टाइप करो — ७५ अक्षरों वाली मसराम गोंडी लिपि में तुरंत लिखो। या मसराम गोंडी
           लिखो — हिन्दी / देवनागरी में देखो। लिपि अपने आप पहचानी जाती है; कॉपी, बदलो और
           साफ़ बटन नीचे हैं।
         </p>
-        <p className="mt-3 font-gondi text-3xl text-gold-400 md:text-4xl">
+        <p className="mt-3 font-gondi text-3xl text-forest-600 md:text-4xl">
           𑴤𑴫𑴦𑴱𑴤 𑴎𑴽𑵀𑴘𑴳
         </p>
       </section>
@@ -103,8 +103,8 @@ export default function ConverterPage() {
           <span className="font-gondi text-base">𑵇</span>।
         </div>
 
-        <h2 id="map-heading" className="mt-8 font-display text-2xl text-cream-50">
-          अक्षर मानचित्र <span className="text-base font-normal text-cream-200/70">· Character map</span>
+        <h2 id="map-heading" className="mt-8 font-display text-2xl font-bold text-forest-600">
+          अक्षर मानचित्र <span className="text-base font-normal text-ink-700/70">· Character map</span>
         </h2>
         <div className="mt-4 grid gap-4 md:grid-cols-2">
           <MapTable title="स्वर" rows={VOWELS} />
@@ -120,7 +120,7 @@ export default function ConverterPage() {
       <section className="mt-10 text-center">
         <Link
           href="/keyboard"
-          className="inline-flex items-center gap-2 rounded-xl border border-gold-400/40 px-5 py-2.5 text-sm text-gold-300 hover:bg-gold-400/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-400"
+          className="inline-flex items-center gap-2 rounded-xl border border-terracotta-500/40 px-5 py-2.5 text-sm font-semibold text-terracotta-600 hover:bg-terracotta-500/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta-500"
         >
           पूरा मसराम गोंडी कीबोर्ड खोलो →
         </Link>

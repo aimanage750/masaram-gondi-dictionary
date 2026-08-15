@@ -16,15 +16,15 @@ export default async function VakyaPage() {
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-10">
-      <p className="text-xs uppercase tracking-[0.2em] text-gold-300">Sentences</p>
-      <h1 className="font-display text-3xl text-cream-50">वाक्यांश</h1>
-      <p className="mt-2 font-deva text-lg text-cream-100/90">गोंडी वाक्य · हिन्दी · English</p>
-      <p className="mt-1 text-sm text-cream-200/70">
+      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-terracotta-500">Sentences</p>
+      <h1 className="font-display text-3xl font-bold text-forest-600">वाक्यांश</h1>
+      <p className="mt-2 font-deva text-lg text-terracotta-500">गोंडी वाक्य · हिन्दी · English</p>
+      <p className="mt-1 text-sm text-ink-700/70">
         केवल किताब से सुने और लिखे गए वाक्य। अनुमान से कुछ नहीं जोड़ा जाता।
       </p>
 
       {rows.length === 0 ? (
-        <div className="gond-frame mt-8 rounded-2xl bg-cream-50 p-6">
+        <div className="gond-frame mt-8 rounded-2xl bg-white p-6">
           <p className="font-gondi text-3xl text-forest-600">𑴎𑴉𑴟𑴱𑴝𑴳</p>
           <p className="mt-3 font-deva text-xl text-ink-800">वाक्य जल्द यहाँ आएंगे।</p>
           <p className="mt-2 font-deva text-ink-700">
@@ -43,7 +43,7 @@ export default async function VakyaPage() {
       ) : (
         <ul className="mt-8 space-y-4">
           {rows.map((s) => (
-            <li key={s.id} className="gond-frame rounded-2xl bg-cream-50 p-5">
+            <li key={s.id} className="gond-frame rounded-2xl bg-white p-5">
               <p className="text-xs uppercase tracking-wide text-forest-500">Masaram Gondi</p>
               <GondiScript text={s.gondi_script} className="mt-1 block text-3xl text-forest-600" />
               <dl className="mt-4 space-y-2 text-sm">

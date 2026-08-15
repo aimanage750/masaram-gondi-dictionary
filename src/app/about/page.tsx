@@ -11,13 +11,13 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   return (
     <div className="mx-auto max-w-3xl px-4 py-10">
-      <p className="text-xs uppercase tracking-[0.2em] text-gold-300">About</p>
-      <h1 className="mt-2 font-display text-3xl text-cream-50">इस वेबसाइट के बारे में</h1>
-      <p className="mt-2 font-gondi text-3xl text-gold-400" aria-hidden>
+      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-terracotta-500">About</p>
+      <h1 className="mt-2 font-display text-3xl font-bold text-forest-600">इस वेबसाइट के बारे में</h1>
+      <p className="mt-2 font-gondi text-3xl text-terracotta-500" aria-hidden>
         𑴎𑴉𑴟𑴱𑴝𑴳 𑴧𑴺𑴛𑴱
       </p>
 
-      <div className="mt-6 space-y-4 rounded-3xl border border-ochre-500/25 bg-cream-50 p-6 text-ink-800 shadow-card md:p-8">
+      <div className="mt-6 space-y-4 rounded-3xl border border-earth-500/10 bg-white p-6 text-ink-800 shadow-card md:p-8">
         <p className="font-deva leading-relaxed">
           यह वेबसाइट <strong>Masaram Gondi Language Platform</strong> है — मसराम गोंडी लिपि
           (Unicode U+11D00–U+11D5F) में गोंडी भाषा को सुरक्षित रखने, सीखने और लिखने का एक
@@ -78,6 +78,29 @@ export default function AboutPage() {
               ध्वनि-मानचित्र है — विराम, हलंता, रेफ़ और र-कार सहित।
             </li>
           </ul>
+        </section>
+
+        <section aria-labelledby="about-culture">
+          <h2 id="about-culture" className="mt-4 font-display text-xl text-forest-600">
+            Culture &amp; Knowledge · संस्कृति और ज्ञान
+          </h2>
+          <ul className="mt-2 list-disc space-y-1.5 pl-5 font-deva">
+            <li>
+              गोंडी भाषा द्रविड़ भाषा-परिवार से है और गोंडवाना क्षेत्र (मध्य भारत) की आदिवासी
+              भाषा है — बोलियों समेत।
+            </li>
+            <li>
+              मसराम गोंडी लिपि का सृजन <strong>मुंशी मंगल सिंह मसराम</strong> ने 1918 में किया;
+              इसमें ७५ अक्षर हैं और यह Unicode U+11D00–U+11D5F में दर्ज है।
+            </li>
+            <li>
+              गोंड चित्रकला, पेड़-वन-पर्वत की उपासना और सामुदायिक जीवन इस संस्कृति की पहचान
+              है — यही भावना इस वेबसाइट के डिज़ाइन में है।
+            </li>
+          </ul>
+          <p className="mt-2 text-xs text-ink-700/60">
+            ये सामान्य, सुविदित तथ्य हैं; विस्तृत सामग्री स्रोत मिलने पर जोड़ी जाएगी।
+          </p>
         </section>
 
         <p className="mt-4 border-t border-terracotta-500/15 pt-4 font-deva">

@@ -15,7 +15,7 @@ export function GrammarCard({
   return (
     <Link
       href={`/grammar/${lesson.slug}`}
-      className="group flex gap-4 rounded-2xl border border-ochre-500/25 bg-cream-50 p-4 shadow-card transition hover:-translate-y-0.5 hover:border-terracotta-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-400"
+      className="group flex gap-4 rounded-2xl border border-earth-500/10 bg-white p-4 shadow-card transition hover:-translate-y-0.5 hover:border-terracotta-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta-500"
     >
       <span
         aria-hidden

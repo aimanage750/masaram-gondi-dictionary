@@ -93,23 +93,23 @@ export function LessonLayout({ lesson }: { lesson: GrammarLesson }) {
       <nav aria-label="Breadcrumb" className="text-sm">
         <Link
           href="/grammar"
-          className="text-gold-300 underline-offset-2 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-400"
+          className="text-terracotta-500 underline-offset-2 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta-500"
         >
           ← व्याकरण
         </Link>
       </nav>
 
       <header className="mt-4">
-        <p className="text-xs uppercase tracking-[0.2em] text-gold-400">Grammar · व्याकरण</p>
-        <h1 className="mt-2 flex flex-wrap items-baseline gap-x-4 font-deva text-3xl text-cream-50 md:text-4xl">
-          <span aria-hidden className="font-gondi text-gold-400">{lesson.glyph}</span>
+        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-terracotta-500">Grammar · व्याकरण</p>
+        <h1 className="mt-2 flex flex-wrap items-baseline gap-x-4 font-deva text-3xl font-bold text-forest-600 md:text-4xl">
+          <span aria-hidden className="font-gondi text-terracotta-500">{lesson.glyph}</span>
           {lesson.name_hi}
-          <span className="text-lg font-normal text-cream-200/70">{lesson.name_en}</span>
+          <span className="text-lg font-normal text-ink-700/70">{lesson.name_en}</span>
         </h1>
-        <p className="mt-2 font-deva leading-relaxed text-cream-200/80">{lesson.summary}</p>
+        <p className="mt-2 font-deva leading-relaxed text-ink-700">{lesson.summary}</p>
       </header>
 
-      <div className="mt-8 rounded-3xl border border-ochre-500/25 bg-cream-50 p-5 shadow-card md:p-8">
+      <div className="mt-8 rounded-3xl border border-earth-500/10 bg-white p-5 shadow-card md:p-8">
         <p className="rounded-xl border border-forest-500/25 bg-forest-500/10 px-3 py-2 text-sm leading-relaxed text-ink-700">
           {POLICY_NOTE}
         </p>
@@ -122,11 +122,11 @@ export function LessonLayout({ lesson }: { lesson: GrammarLesson }) {
         {prev ? (
           <Link
             href={`/grammar/${prev.slug}`}
-            className="flex min-w-0 flex-1 items-center gap-2 rounded-2xl border border-ochre-500/25 bg-forest-700/70 px-4 py-3 text-cream-100 hover:border-gold-400/60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-400"
+            className="flex min-w-0 flex-1 items-center gap-2 rounded-2xl border border-earth-500/15 bg-cream-200/60 px-4 py-3 text-ink-800 hover:border-terracotta-500/50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta-500"
           >
             <ChevronLeft size={18} aria-hidden />
             <span className="min-w-0">
-              <span className="block text-[11px] uppercase tracking-wide text-cream-200/70">पिछला पाठ</span>
+              <span className="block text-[11px] uppercase tracking-wide text-ink-700/60">पिछला पाठ</span>
               <span className="block truncate font-deva">{prev.name_hi}</span>
             </span>
           </Link>
@@ -139,7 +139,7 @@ export function LessonLayout({ lesson }: { lesson: GrammarLesson }) {
             className="flex min-w-0 flex-1 items-center justify-end gap-2 rounded-2xl border border-ochre-500/25 bg-forest-700/70 px-4 py-3 text-right text-cream-100 hover:border-gold-400/60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-400"
           >
             <span className="min-w-0">
-              <span className="block text-[11px] uppercase tracking-wide text-cream-200/70">अगला पाठ</span>
+              <span className="block text-[11px] uppercase tracking-wide text-ink-700/60">अगला पाठ</span>
               <span className="block truncate font-deva">{next.name_hi}</span>
             </span>
             <ChevronRight size={18} aria-hidden />

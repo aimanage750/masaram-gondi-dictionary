@@ -11,10 +11,10 @@ export const metadata: Metadata = {
 export default function ContactPage() {
   return (
     <div className="mx-auto max-w-2xl px-4 py-10">
-      <p className="text-xs uppercase tracking-[0.2em] text-gold-300">Contact Us</p>
-      <h1 className="mt-2 font-display text-3xl text-cream-50">About Author · लेखक परिचय</h1>
+      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-terracotta-500">Contact Us</p>
+      <h1 className="mt-2 font-display text-3xl font-bold text-forest-600">About Author · लेखक परिचय</h1>
 
-      <div className="mt-6 rounded-3xl border border-ochre-500/25 bg-cream-50 p-6 text-ink-800 shadow-card md:p-8">
+      <div className="mt-6 rounded-3xl border border-earth-500/10 bg-white p-6 text-ink-800 shadow-card md:p-8">
         <div className="flex items-center gap-4">
           <span className="grid h-16 w-16 shrink-0 place-items-center rounded-full bg-forest-500 text-cream-50">
             <User size={28} aria-hidden />
@@ -63,8 +63,8 @@ export default function ContactPage() {
         </p>
       </div>
 
-      <p className="mt-6 text-center font-deva text-cream-100">
-        Create by <strong className="text-gold-300">Saiyyam Ji</strong>
+      <p className="mt-6 text-center font-deva text-ink-800">
+        Create by <strong className="text-terracotta-600">Saiyyam Ji</strong>
       </p>
     </div>
   );

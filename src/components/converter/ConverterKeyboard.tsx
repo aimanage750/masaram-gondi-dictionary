@@ -26,7 +26,7 @@ export function ConverterKeyboard({
         onClick={onToggle}
         aria-expanded={open}
         aria-controls="converter-keyboard"
-        className="inline-flex min-h-[44px] items-center gap-2 rounded-xl border border-gold-400/40 px-4 py-2 text-sm text-gold-300 hover:bg-gold-400/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-400"
+        className="inline-flex min-h-[44px] items-center gap-2 rounded-xl border border-terracotta-500/40 px-4 py-2 text-sm font-medium text-terracotta-600 hover:bg-terracotta-500/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta-500"
       >
         {open ? <KeyboardOff size={16} /> : <Keyboard size={16} />}
         {open ? "कीबोर्ड छिपाओ" : "कीबोर्ड से लिखो"}

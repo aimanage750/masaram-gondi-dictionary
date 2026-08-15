@@ -19,16 +19,18 @@ const deva = localFont({
 
 export const metadata: Metadata = {
   title: {
-    default: "Masaram Gondi Language Platform",
-    template: "%s · Masaram Gondi Language Platform",
+    default: "Masaram Gondi Script Dictionary",
+    template: "%s · Masaram Gondi Script Dictionary",
   },
   description:
-    "Masaram Gondi Language Platform — dictionary, script converter, grammar and keyboard. Search Gondi words in Masaram Gondi script, Devanagari pronunciation, Hindi and English. Built from the uploaded गोंडी करीयाट source.",
-  applicationName: "Masaram Gondi Language Platform",
+    "Masaram Gondi Script Dictionary — search Gondi words in Masaram Gondi script, Devanagari pronunciation, Hindi and English; translate, convert and learn the script. Preserving Our Language • Our Identity.",
+  applicationName: "Masaram Gondi Script Dictionary",
   manifest: "/manifest.json",
   authors: [{ name: "Saiyyam Ji" }, { name: "Rajendra Saiyyam" }],
   keywords: [
     "Masaram Gondi",
+    "Masaram Gondi Script",
+    "Gondi Hindi English Dictionary",
     "Gondi dictionary",
     "Gondi converter",
     "Gondi grammar",
@@ -40,7 +42,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#142418",
+  themeColor: "#123C2A",
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,

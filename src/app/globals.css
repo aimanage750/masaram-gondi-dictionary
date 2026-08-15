@@ -3,49 +3,39 @@
 @tailwind utilities;
 
 :root {
-  --cream: #f7f0e4;
-  --ink: #2a1f14;
-  --terracotta: #c45c26;
-  --forest: #2d5a3d;
-  --ochre: #d4a017;
-  --gold: #f0c14b;
+  --cream: #f5ebdd;
+  --beige: #ede0cc;
+  --ink: #17221c;
+  --forest: #123c2a;
+  --deep: #08251a;
+  --earth: #6b3518;
+  --terracotta: #a94f24;
+  --gold: #c58a3a;
 }
 
 html,
 body {
-  background: #101910;
-  color: var(--cream);
+  background: var(--cream);
+  color: var(--ink);
 }
 
 /*
- * Dark forest + tribal-dot background, adapted from the converter project's
- * design system (web/css/style.css in aimanage750/masaram-gondi).
- * Layers: fine ochre/terracotta/gold dots over a deep forest gradient.
- * Content sits on cream "paper" cards to keep long text readable.
+ * Light earthy base: soft cream with a whisper of tribal dot/line pattern
+ * (forest green + terracotta + gold at very low opacity) and gentle radial
+ * tints — inspired by the reference design's paper texture.
  */
 body {
   min-height: 100vh;
   background-image:
-    radial-gradient(circle at 12% 8%, #2a4a30 0 2px, transparent 3px),
-    radial-gradient(circle at 28% 22%, #c45c26 0 1.4px, transparent 2px),
-    radial-gradient(circle at 70% 14%, #d4a017 0 1.6px, transparent 2.2px),
-    radial-gradient(circle at 88% 40%, #2a7a6e 0 1.5px, transparent 2px),
-    radial-gradient(circle at 18% 70%, #f0c14b 0 1.2px, transparent 2px),
-    radial-gradient(circle at 60% 82%, #c45c26 0 1.5px, transparent 2px),
-    linear-gradient(165deg, #101910 0%, #1a2c1c 42%, #24180f 100%);
-  background-size:
-    28px 28px,
-    36px 36px,
-    44px 44px,
-    32px 32px,
-    40px 40px,
-    34px 34px,
-    100% 100%;
+    radial-gradient(circle at 10% 6%, rgba(30, 81, 56, 0.05), transparent 30%),
+    radial-gradient(circle at 92% 12%, rgba(169, 79, 36, 0.05), transparent 28%),
+    radial-gradient(circle at 50% 96%, rgba(197, 138, 58, 0.06), transparent 32%),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140' viewBox='0 0 140 140'><g fill='none' stroke='%23123c2a' stroke-opacity='0.055' stroke-width='1'><circle cx='16' cy='22' r='1.3'/><circle cx='52' cy='10' r='1.1'/><circle cx='96' cy='26' r='1.4'/><circle cx='126' cy='70' r='1.2'/><circle cx='30' cy='96' r='1.3'/><circle cx='78' cy='118' r='1.2'/><path d='M10 64c20-12 32 10 52 0M74 44c16 10 26-8 46 4M18 128c18-10 30 8 48 0'/></g><g fill='none' stroke='%23a94f24' stroke-opacity='0.05' stroke-width='1'><circle cx='70' cy='70' r='1.1'/><circle cx='112' cy='108' r='1.2'/><path d='M96 88c14 8 22-6 36 4'/></g></svg>");
 }
 
 ::selection {
-  background: rgba(240, 193, 75, 0.35);
-  color: #fff8ec;
+  background: rgba(197, 138, 58, 0.35);
+  color: #08251a;
 }
 
 .font-gondi {
@@ -58,26 +48,48 @@ body {
   font-family: var(--font-deva), "Noto Sans Devanagari", serif;
 }
 
-/* Cream "paper" card with terracotta frame + inner gold line. */
+/* Soft framed card used across dictionary results and detail pages. */
 .gond-frame {
-  border: 2px solid rgba(196, 92, 38, 0.35);
+  border: 1px solid rgba(107, 53, 24, 0.18);
   box-shadow:
-    inset 0 0 0 6px rgba(212, 160, 23, 0.12),
-    0 18px 50px rgba(12, 20, 12, 0.28);
+    inset 0 0 0 4px rgba(197, 138, 58, 0.08),
+    0 14px 34px -18px rgba(23, 34, 28, 0.25);
 }
 
 .tofu-flag {
-  outline: 2px dashed #c45c26;
+  outline: 2px dashed #a94f24;
   outline-offset: 2px;
 }
 
-/* Visible keyboard focus everywhere (a11y), without changing mouse clicks. */
 :focus-visible {
-  outline: 2px solid var(--gold);
+  outline: 2px solid #a94f24;
   outline-offset: 2px;
 }
 
-/* Respect users who prefer less motion. */
+/* Subtle entrance animation — cheap, no JS, respects reduced motion. */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.anim-rise {
+  animation: rise 0.55s ease both;
+}
+.anim-rise-1 {
+  animation: rise 0.55s 0.08s ease both;
+}
+.anim-rise-2 {
+  animation: rise 0.55s 0.16s ease both;
+}
+.anim-rise-3 {
+  animation: rise 0.55s 0.24s ease both;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

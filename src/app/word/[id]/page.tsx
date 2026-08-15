@@ -13,10 +13,10 @@ export default async function WordPage({ params }: { params: { id: string } }) {
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-10">
-      <Link href="/" className="text-sm text-gold-300 underline-offset-2 hover:underline">
+      <Link href="/" className="text-sm font-medium text-terracotta-500 underline-offset-2 hover:underline">
         ← Search
       </Link>
-      <article className="gond-frame mt-4 rounded-3xl bg-cream-50 p-6 md:p-10">
+      <article className="gond-frame mt-4 rounded-3xl bg-white p-6 md:p-10">
         <p className="text-xs uppercase tracking-[0.2em] text-forest-500">Masaram Gondi</p>
         <GondiScript text={entry.gondi_script} className="mt-2 block text-5xl text-forest-600 md:text-6xl" />
 
