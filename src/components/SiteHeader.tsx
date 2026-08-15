@@ -52,13 +52,13 @@ export function SiteHeader() {
         >
           <TreeLogo className="h-11 w-11 md:h-12 md:w-12" />
           <span className="min-w-0">
-            <span className="block truncate font-display text-lg font-bold leading-tight text-forest-600 md:text-xl">
+            <span className="block truncate font-english text-lg font-bold leading-tight tracking-tight text-forest-600 md:text-xl">
               Masaram Gondi
             </span>
-            <span className="block font-display text-sm font-semibold leading-tight text-terracotta-500 md:text-base">
+            <span className="block font-english text-sm font-semibold leading-tight text-terracotta-500 md:text-base">
               Script Dictionary
             </span>
-            <span className="hidden text-[11px] tracking-wide text-ink-700/70 sm:block">
+            <span className="hidden font-english text-[11px] tracking-wide text-ink-700/70 sm:block">
               Preserving Our Language • Our Identity
             </span>
           </span>

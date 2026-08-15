@@ -38,14 +38,38 @@ body {
   color: #08251a;
 }
 
+/* ---- Multi-script typography system -------------------------------
+ * English → Inter (var --font-sans) · Hindi → Noto Sans Devanagari
+ * Masaram Gondi → Noto Sans Masaram Gondi · Display → serif stack.
+ * Line heights per script: EN 1.5–1.7 · HI 1.6–1.8 · Gondi 1.4–1.6.
+ * ------------------------------------------------------------------ */
+body {
+  line-height: 1.6;
+}
+
 .font-gondi {
   font-family: var(--font-gondi), "Noto Sans Masaram Gondi", sans-serif;
   font-feature-settings: "kern" 1;
-  line-height: 1.35;
+  line-height: 1.5;
+  letter-spacing: normal;
 }
 
-.font-deva {
-  font-family: var(--font-deva), "Noto Sans Devanagari", serif;
+.font-deva,
+.font-hindi {
+  font-family: var(--font-deva), "Noto Sans Devanagari", sans-serif;
+  line-height: 1.7;
+  letter-spacing: normal;
+}
+
+.font-english {
+  font-family: var(--font-sans), Inter, system-ui, sans-serif;
+  line-height: 1.6;
+}
+
+/* Cultural display serif — headings only, slightly tight, never body. */
+.font-display {
+  line-height: 1.15;
+  letter-spacing: -0.01em;
 }
 
 /* Soft framed card used across dictionary results and detail pages. */

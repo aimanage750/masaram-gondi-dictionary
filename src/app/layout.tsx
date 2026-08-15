@@ -1,9 +1,23 @@
 import type { Metadata, Viewport } from "next";
+import { Inter } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
+
+/**
+ * Multi-script typography system:
+ *  - English / UI      → Inter (next/font/google, self-hosted, variable)
+ *  - Hindi / Devanagari→ Noto Sans Devanagari (local TTF, preserved)
+ *  - Masaram Gondi     → Noto Sans Masaram Gondi (local TTF, preserved)
+ *  - Cultural display  → serif stack (see tailwind.config `display`)
+ */
+const inter = Inter({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-sans",
+});
 
 const gondi = localFont({
   src: "../../public/fonts/NotoSansMasaramGondi-Regular.ttf",
@@ -50,7 +64,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="hi" className={`${gondi.variable} ${deva.variable}`}>
+    <html lang="hi" className={`${inter.variable} ${gondi.variable} ${deva.variable}`}>
       <body className="font-sans antialiased min-h-screen flex flex-col">
         <SiteHeader />
         <main className="flex-1">{children}</main>

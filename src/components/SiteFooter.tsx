@@ -52,10 +52,10 @@ export function SiteFooter() {
           <div className="flex items-center gap-3">
             <TreeLogo className="h-12 w-12" />
             <div>
-              <p className="font-display text-lg font-bold leading-tight text-cream-50">
+              <p className="font-english text-lg font-bold leading-tight tracking-tight text-cream-50">
                 Masaram Gondi
               </p>
-              <p className="font-display text-sm font-semibold text-gold-400">
+              <p className="font-english text-sm font-semibold text-gold-400">
                 Script Dictionary
               </p>
             </div>

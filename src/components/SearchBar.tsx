@@ -55,7 +55,7 @@ export function SearchBar({
             placeholder="Type in Hindi, English or Gondi..."
             aria-label="Search dictionary — Type in Hindi, English or Gondi"
             className={`w-full rounded-xl bg-transparent pl-10 pr-3 text-ink-800 outline-none placeholder:text-ink-700/45 focus:ring-2 focus:ring-terracotta-500/40 ${
-              big ? "py-3.5 font-deva text-lg" : "py-2.5 font-deva text-base"
+              big ? "py-3.5 font-sans text-lg" : "py-2.5 font-sans text-base"
             }`}
           />
         </div>

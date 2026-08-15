@@ -104,7 +104,7 @@ export function FeatureCards() {
           <span className={`inline-grid place-items-center rounded-2xl p-3 ${c.ring}`}>
             {c.art}
           </span>
-          <h3 className="mt-4 font-display text-xl font-bold text-forest-600">{c.title}</h3>
+          <h3 className="mt-4 font-english text-xl font-bold tracking-tight text-forest-600">{c.title}</h3>
           <p className="mt-1.5 text-sm leading-relaxed text-ink-700">{c.desc}</p>
           <span
             aria-hidden

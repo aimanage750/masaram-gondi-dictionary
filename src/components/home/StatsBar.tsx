@@ -29,7 +29,7 @@ export function StatsBar({
             </dt>
             <s.icon className="shrink-0 text-gold-400" size={26} aria-hidden />
             <dd>
-              <p className="font-display text-2xl font-bold text-cream-50 md:text-3xl">
+              <p className="font-english text-2xl font-bold tracking-tight text-cream-50 md:text-3xl">
                 {s.value}
                 <span className="text-gold-400">+</span>
               </p>

@@ -53,6 +53,20 @@ const config: Config = {
         },
       },
       fontFamily: {
+        /* Base UI stack: English→Inter; Devanagari/Gondi glyphs fall back
+           per-glyph to their own fonts (never makes English Devanagari). */
+        sans: [
+          "var(--font-sans)",
+          "Inter",
+          "Noto Sans Devanagari",
+          "Noto Sans Masaram Gondi",
+          "system-ui",
+          "sans-serif",
+        ],
+        english: ["var(--font-sans)", "Inter", "system-ui", "sans-serif"],
+        hindi: ["var(--font-deva)", "Noto Sans Devanagari", "sans-serif"],
+        deva: ["var(--font-deva)", "Noto Sans Devanagari", "sans-serif"],
+        gondi: ["var(--font-gondi)", "Noto Sans Masaram Gondi", "sans-serif"],
         display: [
           "Iowan Old Style",
           "Palatino Linotype",
@@ -60,14 +74,6 @@ const config: Config = {
           "Georgia",
           "serif",
         ],
-        sans: [
-          "var(--font-sans)",
-          "Noto Sans Devanagari",
-          "system-ui",
-          "sans-serif",
-        ],
-        gondi: ["var(--font-gondi)", "Noto Sans Masaram Gondi", "sans-serif"],
-        deva: ["var(--font-deva)", "Noto Sans Devanagari", "serif"],
       },
       boxShadow: {
         card: "0 10px 30px -12px rgba(23, 34, 28, 0.18)",
