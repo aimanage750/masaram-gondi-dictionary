@@ -1,5 +1,15 @@
-const CACHE = "mgd-v1";
-const PRECACHE = ["/", "/browse", "/about", "/keyboard", "/offline.html", "/manifest.json"];
+const CACHE = "mgd-v2";
+const PRECACHE = [
+  "/",
+  "/browse",
+  "/about",
+  "/keyboard",
+  "/converter",
+  "/grammar",
+  "/contact",
+  "/offline.html",
+  "/manifest.json",
+];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(

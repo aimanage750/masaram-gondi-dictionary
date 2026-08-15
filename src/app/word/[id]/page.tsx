@@ -13,7 +13,7 @@ export default async function WordPage({ params }: { params: { id: string } }) {
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-10">
-      <Link href="/" className="text-sm text-terracotta-600">
+      <Link href="/" className="text-sm text-gold-300 underline-offset-2 hover:underline">
         ← Search
       </Link>
       <article className="gond-frame mt-4 rounded-3xl bg-cream-50 p-6 md:p-10">

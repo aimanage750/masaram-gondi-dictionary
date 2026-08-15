@@ -2,6 +2,11 @@
 const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
+  async redirects() {
+    return [
+      { source: "/grammar/any", destination: "/grammar/anya", permanent: false },
+    ];
+  },
   async headers() {
     return [
       {

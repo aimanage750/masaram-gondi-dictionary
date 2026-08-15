@@ -19,20 +19,28 @@ const deva = localFont({
 
 export const metadata: Metadata = {
   title: {
-    default: "Masaram Gondi Dictionary",
-    template: "%s · Masaram Gondi Dictionary",
+    default: "Masaram Gondi Language Platform",
+    template: "%s · Masaram Gondi Language Platform",
   },
   description:
-    "Search Gondi words in Masaram Gondi script, Devanagari pronunciation, Hindi and English. Built from the uploaded गोंडी करीयाट source.",
-  applicationName: "Masaram Gondi Dictionary",
+    "Masaram Gondi Language Platform — dictionary, script converter, grammar and keyboard. Search Gondi words in Masaram Gondi script, Devanagari pronunciation, Hindi and English. Built from the uploaded गोंडी करीयाट source.",
+  applicationName: "Masaram Gondi Language Platform",
   manifest: "/manifest.json",
-  authors: [{ name: "Saiyyam Ji" }],
-  keywords: ["Masaram Gondi", "Gondi dictionary", "गोंडी", "Unicode 11D00"],
-  appleWebApp: { capable: true, title: "Gondi Dictionary", statusBarStyle: "default" },
+  authors: [{ name: "Saiyyam Ji" }, { name: "Rajendra Saiyyam" }],
+  keywords: [
+    "Masaram Gondi",
+    "Gondi dictionary",
+    "Gondi converter",
+    "Gondi grammar",
+    "गोंडी",
+    "मसराम गोंडी",
+    "Unicode 11D00",
+  ],
+  appleWebApp: { capable: true, title: "Masaram Gondi", statusBarStyle: "default" },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#C45C26",
+  themeColor: "#142418",
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,

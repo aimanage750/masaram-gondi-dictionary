@@ -16,17 +16,17 @@ export default async function VakyaPage() {
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-10">
-      <p className="text-xs uppercase tracking-[0.2em] text-terracotta-600">Sentences</p>
-      <h1 className="font-display text-3xl text-ink-800">वाक्यांश</h1>
-      <p className="mt-2 font-deva text-lg text-ink-700">गोंडी वाक्य · हिन्दी · English</p>
-      <p className="mt-1 text-sm text-ink-700/70">
+      <p className="text-xs uppercase tracking-[0.2em] text-gold-300">Sentences</p>
+      <h1 className="font-display text-3xl text-cream-50">वाक्यांश</h1>
+      <p className="mt-2 font-deva text-lg text-cream-100/90">गोंडी वाक्य · हिन्दी · English</p>
+      <p className="mt-1 text-sm text-cream-200/70">
         केवल किताब से सुने और लिखे गए वाक्य। अनुमान से कुछ नहीं जोड़ा जाता।
       </p>
 
       {rows.length === 0 ? (
         <div className="gond-frame mt-8 rounded-2xl bg-cream-50 p-6">
           <p className="font-gondi text-3xl text-forest-600">𑴎𑴉𑴟𑴱𑴝𑴳</p>
-          <p className="mt-3 font-deva text-xl">वाक्य जल्द यहाँ आएंगे।</p>
+          <p className="mt-3 font-deva text-xl text-ink-800">वाक्य जल्द यहाँ आएंगे।</p>
           <p className="mt-2 font-deva text-ink-700">
             किताब सुनकर और देखकर वाक्यांश अपलोड होंगे। तब हर वाक्य चार फ़ील्ड में दिखेगा:
           </p>
