@@ -10,12 +10,15 @@ export function GondiKeyboard({
   value,
   onChange,
   className = "",
+  lockMode,
 }: {
   value: string;
   onChange: (next: string) => void;
   className?: string;
+  /** Fix the keyboard to one script (hides the mode toggle). */
+  lockMode?: Mode;
 }) {
-  const [mode, setMode] = useState<Mode>("devanagari");
+  const [mode, setMode] = useState<Mode>(lockMode ?? "devanagari");
   const layout = mode === "masaram" ? KEYBOARD_LAYOUT : DEVANAGARI_KEYBOARD;
 
   function push(ch: string) {
@@ -35,14 +38,16 @@ export function GondiKeyboard({
         <p className="text-xs uppercase tracking-wide text-ink-700/70">
           {mode === "masaram" ? "Masaram Gondi keyboard" : "Gondi Pronunciation (Devanagari)"}
         </p>
-        <button
-          type="button"
-          onClick={() => setMode(mode === "masaram" ? "devanagari" : "masaram")}
-          className="inline-flex items-center gap-1 rounded-full bg-forest-500 px-3 py-1 text-xs text-cream-50"
-        >
-          <ArrowLeftRight size={12} />
-          {mode === "masaram" ? "Devanagari" : "Masaram"}
-        </button>
+        {!lockMode && (
+          <button
+            type="button"
+            onClick={() => setMode(mode === "masaram" ? "devanagari" : "masaram")}
+            className="inline-flex items-center gap-1 rounded-full bg-forest-500 px-3 py-1 text-xs text-cream-50"
+          >
+            <ArrowLeftRight size={12} />
+            {mode === "masaram" ? "Devanagari" : "Masaram"}
+          </button>
+        )}
       </div>
       <KeyRow keys={layout.vowels} onPress={push} />
       <KeyRow keys={layout.consonants} onPress={push} />

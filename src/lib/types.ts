@@ -70,6 +70,49 @@ export interface ContributionInput {
   contributor_email?: string;
 }
 
+/** Rich public-contribution payload (Phase 4). Every field is optional —
+ * only at least one Gondi identifier is required. Contributor email is
+ * private and must never be rendered on public pages. */
+export interface ContributionDetails {
+  gondi_devanagari?: string;
+  roman_gondi?: string;
+  masaram_gondi?: string;
+  pronunciation?: string;
+  gondi_example?: string;
+  dialect?: string;
+  hindi?: string;
+  roman_hindi?: string;
+  hindi_definition?: string;
+  hindi_example?: string;
+  hindi_synonyms?: string;
+  hindi_antonyms?: string;
+  english?: string;
+  english_definition?: string;
+  english_example?: string;
+  english_synonyms?: string;
+  english_antonyms?: string;
+  source_type?: string;
+  source_name?: string;
+  source_author?: string;
+  source_page?: string;
+  source_url?: string;
+  additional_notes?: string;
+  /** Machine-derived suggestions the contributor accepted, always marked
+   * "Suggested — Review Required" (e.g. masaram-from-devanagari). */
+  suggestions_used?: string[];
+}
+
+/** A stored contribution. Core stays DictionaryEntry-shaped so the existing
+ * admin review/approve flow keeps working; the rich payload lives in
+ * `details`. Contributions are ALWAYS stored with status "pending" —
+ * the server forces this regardless of client input. */
+export interface Contribution extends DictionaryEntry {
+  contributor_name?: string;
+  contributor_email?: string;
+  review_status: "pending" | "approved" | "rejected";
+  details?: ContributionDetails;
+}
+
 export interface AuditEvent {
   id: string;
   actor: string;

@@ -1,17 +1,11 @@
 import { promises as fs } from "fs";
 import path from "path";
-import type { AuditEvent, DictionaryEntry, GondiSentence } from "@/lib/types";
+import type { AuditEvent, Contribution, DictionaryEntry, GondiSentence } from "@/lib/types";
 
 export interface LocalDB {
   entries: DictionaryEntry[];
   sentences: GondiSentence[];
-  contributions: Array<
-    DictionaryEntry & {
-      contributor_name?: string;
-      contributor_email?: string;
-      review_status: "pending" | "approved" | "rejected";
-    }
-  >;
+  contributions: Contribution[];
   audit: AuditEvent[];
 }
 

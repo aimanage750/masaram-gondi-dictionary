@@ -94,12 +94,13 @@ export async function deleteEntry(id: string, actor: string) {
   await writeLocal(db);
 }
 
-export async function addContribution(
-  entry: LocalDB["contributions"][number]
-) {
+export async function addContribution(entry: LocalDB["contributions"][number]) {
   if (isSupabaseConfigured()) {
     const sb = createServiceClient();
-    const { error } = await sb.from("contributions").insert({
+    const payloadBytes = JSON.stringify(entry).length;
+    // Rich `details` column exists only after migration 0008; fall back to
+    // the core columns so unmigrated databases keep accepting contributions.
+    const core = {
       gondi_pronunciation: entry.gondi_pronunciation,
       hindi: entry.hindi,
       english: entry.english,
@@ -108,9 +109,16 @@ export async function addContribution(
       contributor_name: entry.contributor_name,
       contributor_email: entry.contributor_email,
       status: "pending",
-      payload_bytes: JSON.stringify(entry).length,
+      payload_bytes: payloadBytes,
+    };
+    const rich = await sb.from("contributions").insert({
+      ...core,
+      details: entry.details ?? null,
     });
-    if (error) throw error;
+    if (rich.error) {
+      const fallback = await sb.from("contributions").insert(core);
+      if (fallback.error) throw fallback.error;
+    }
     return;
   }
   const db = await readLocal();

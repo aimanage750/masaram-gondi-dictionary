@@ -1,107 +1,43 @@
-"use client";
+import type { Metadata } from "next";
+import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
+import { ContributeForm } from "@/components/contribute/ContributeForm";
 
-import { FormEvent, useEffect, useState } from "react";
-import { GondiKeyboard } from "@/components/GondiKeyboard";
+export const metadata: Metadata = {
+  title: "Contribute a Word · शब्द का योगदान करें",
+  description:
+    "Help expand and improve the Masaram Gondi Dictionary by sharing words, meanings, pronunciations and reliable references. Contributions are reviewed before publication.",
+  alternates: { canonical: "/contribute" },
+};
 
 export default function ContributePage() {
-  const [csrf, setCsrf] = useState("");
-  const [gondi, setGondi] = useState("");
-  const [hindi, setHindi] = useState("");
-  const [english, setEnglish] = useState("");
-  const [notes, setNotes] = useState("");
-  const [name, setName] = useState("");
-  const [msg, setMsg] = useState<string | null>(null);
-  const [err, setErr] = useState<string | null>(null);
-
-  useEffect(() => {
-    fetch("/api/csrf")
-      .then((r) => r.json())
-      .then((d) => setCsrf(d.token))
-      .catch(() => {});
-  }, []);
-
-  async function onSubmit(e: FormEvent) {
-    e.preventDefault();
-    setErr(null);
-    setMsg(null);
-    const res = await fetch("/api/contribute", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        gondi_pronunciation: gondi,
-        hindi,
-        english,
-        notes,
-        contributor_name: name,
-        csrf,
-      }),
-    });
-    const data = await res.json();
-    if (!res.ok) setErr(data.error ?? "Could not submit");
-    else {
-      setMsg("धन्यवाद। आपका सुझाव समीक्षा के लिए भेज दिया गया है।");
-      setGondi("");
-      setHindi("");
-      setEnglish("");
-      setNotes("");
-    }
-  }
-
   return (
-    <div className="mx-auto max-w-xl px-4 py-10">
-      <h1 className="font-display text-3xl font-bold text-forest-600">Contribute a word · योगदान</h1>
-      <p className="mt-2 font-deva text-ink-700">
-        केवल वही गोंडी शब्द भेजें जो किसी स्रोत में लिखा हो। अनुमान से शब्द न बनाएँ।
-      </p>
-      <form onSubmit={onSubmit} className="mt-6 space-y-4 rounded-3xl border border-earth-500/10 bg-white p-5 text-ink-800 shadow-card md:p-6">
-        <label className="block text-sm">
-          Gondi Pronunciation
-          <input
-            required
-            value={gondi}
-            onChange={(e) => setGondi(e.target.value)}
-            className="mt-1 w-full rounded-xl border border-terracotta-500/30 bg-white px-3 py-2 font-deva"
-          />
-        </label>
-        <GondiKeyboard value={gondi} onChange={setGondi} />
-        <label className="block text-sm">
-          Hindi
-          <input
-            required
-            value={hindi}
-            onChange={(e) => setHindi(e.target.value)}
-            className="mt-1 w-full rounded-xl border border-terracotta-500/30 bg-white px-3 py-2 font-deva"
-          />
-        </label>
-        <label className="block text-sm">
-          English
-          <input
-            required
-            value={english}
-            onChange={(e) => setEnglish(e.target.value)}
-            className="mt-1 w-full rounded-xl border border-terracotta-500/30 bg-white px-3 py-2"
-          />
-        </label>
-        <label className="block text-sm">
-          Source / notes
-          <textarea
-            value={notes}
-            onChange={(e) => setNotes(e.target.value)}
-            className="mt-1 w-full rounded-xl border border-terracotta-500/30 bg-white px-3 py-2"
-          />
-        </label>
-        <label className="block text-sm">
-          Your name (optional)
-          <input
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            className="mt-1 w-full rounded-xl border border-terracotta-500/30 bg-white px-3 py-2"
-          />
-        </label>
-        {err && <p className="text-sm text-terracotta-600">{err}</p>}
-        {msg && <p className="text-sm text-forest-600">{msg}</p>}
-        <button className="rounded-xl bg-forest-500 px-5 py-2 text-cream-50">Submit for review</button>
-      </form>
+    <div className="mx-auto max-w-6xl px-4 py-8 md:py-12">
+      <Link
+        href="/browse"
+        className="inline-flex items-center gap-1.5 text-sm font-medium text-terracotta-500 underline-offset-2 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta-500"
+      >
+        <ArrowLeft size={15} aria-hidden /> Back to Dictionary · शब्दकोश
+      </Link>
+
+      <header className="mt-5 max-w-3xl">
+        <h1 className="font-english text-3xl font-bold text-forest-600 md:text-4xl">
+          Contribute a Word
+        </h1>
+        <p className="mt-1 font-deva text-xl text-terracotta-600">शब्द का योगदान करें</p>
+        <p className="mt-3 text-base leading-relaxed text-ink-700/90">
+          Help expand and improve the Masaram Gondi Dictionary by sharing words, meanings,
+          pronunciations and reliable references.
+        </p>
+        <p className="mt-1 font-deva text-base leading-relaxed text-ink-700/80">
+          मसराम गोंडी शब्दकोश को बेहतर बनाने में अपना योगदान दें। हर योगदान समीक्षा के बाद ही प्रकाशित
+          होता है — कुछ भी स्वतः प्रकाशित नहीं होता।
+        </p>
+      </header>
+
+      <div className="mt-7">
+        <ContributeForm />
+      </div>
     </div>
   );
 }
