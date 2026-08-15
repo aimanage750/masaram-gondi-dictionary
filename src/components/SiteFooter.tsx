@@ -139,7 +139,7 @@ export function SiteFooter() {
               <li className="flex items-start gap-2.5">
                 <MapPin size={15} aria-hidden className="mt-0.5 shrink-0 text-gold-400" />
                 <span className="font-english leading-relaxed text-cream-200/80">
-                  Naytola (Dorli), Damoh, Birsa,
+                  Nayatola (Dorli), Damoh, Birsa,
                   <br />
                   Balaghat, M.P., India
                 </span>

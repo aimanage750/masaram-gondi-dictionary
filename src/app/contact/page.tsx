@@ -4,7 +4,7 @@ import { Mail, MapPin, User } from "lucide-react";
 export const metadata: Metadata = {
   title: "Contact Us · लेखक परिचय",
   description:
-    "Masaram Gondi Language Platform — About Author: Rajendra Saiyyam, Naytola (Dorli), Damoh, Birsa, Balaghat, M.P., India.",
+    "Masaram Gondi Language Platform — About Author: Rajendra Saiyyam, Nayatola (Dorli), Damoh, Birsa, Balaghat, M.P., India.",
   alternates: { canonical: "/contact" },
 };
 
@@ -49,7 +49,7 @@ export default function ContactPage() {
             <dd>
               <p className="text-xs uppercase tracking-wide text-ink-700/60">Address / पता</p>
               <p className="font-medium leading-relaxed">
-                Naytola (Dorli), Damoh, Birsa,
+                Nayatola (Dorli), Damoh, Birsa,
                 <br />
                 Balaghat, Madhya Pradesh — India
               </p>
