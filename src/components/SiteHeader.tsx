@@ -7,23 +7,23 @@ import {
   BookOpen,
   GraduationCap,
   Home,
+  Landmark,
   Languages,
   Menu,
   MessageSquareText,
   PenLine,
-  Users,
   X,
 } from "lucide-react";
 import { TreeLogo } from "@/components/brand/TreeLogo";
 
-const NAV = [
+const NAV: { href: string; label: string; short?: string; icon: typeof Home }[] = [
   { href: "/", label: "Home", icon: Home },
   { href: "/browse", label: "Dictionary", icon: BookOpen },
   { href: "/translator", label: "Translator", icon: Languages },
   { href: "/grammar", label: "Grammar", icon: GraduationCap },
   { href: "/vakya", label: "Sentences", icon: MessageSquareText },
   { href: "/script", label: "Script", icon: PenLine },
-  { href: "/about", label: "About Us", icon: Users },
+  { href: "/about", label: "Culture & Knowledge", short: "Culture", icon: Landmark },
 ];
 
 const MORE = [
@@ -73,14 +73,15 @@ export function SiteHeader() {
                 key={n.href}
                 href={n.href}
                 aria-current={on ? "page" : undefined}
-                className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-2 text-sm font-medium transition ${
+                className={`inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-3 py-2 text-[13px] font-medium transition xl:px-3.5 xl:text-sm ${
                   on
                     ? "bg-terracotta-500 text-cream-50 shadow-card"
                     : "text-ink-800 hover:bg-cream-200 hover:text-forest-600"
                 }`}
               >
                 <Icon size={15} aria-hidden />
-                {n.label}
+                <span className="hidden xl:inline">{n.label}</span>
+                <span className="xl:hidden">{n.short ?? n.label}</span>
               </Link>
             );
           })}
