@@ -43,7 +43,9 @@ const ALL_ROWS: Row[] = [
   ...rowsFrom(KEYBOARD_LAYOUT.vowels, "vowels"),
   ...rowsFrom(KEYBOARD_LAYOUT.consonants, "consonants"),
   ...rowsFrom(KEYBOARD_LAYOUT.signs, "signs").map((r) =>
-    r.deva.length === 1 && MATRA_CHARS.includes(r.deva) ? { ...r, cat: "matras" as Category } : r
+    r.deva.length === 1 && MATRA_CHARS.includes(r.deva)
+      ? { ...r, cat: "matras" as Category }
+      : r
   ),
   ...rowsFrom(KEYBOARD_LAYOUT.digits, "digits"),
 ];
@@ -77,6 +79,38 @@ function matches(r: Row, q: string): boolean {
   return false;
 }
 
+/** One category table; height always fits its own rows (no stretching). */
+function SectionCard({ s, className = "" }: { s: { cat: Category; rows: Row[] }; className?: string }) {
+  return (
+    <div className={`rounded-2xl border border-earth-500/10 bg-white p-4 shadow-card ${className}`}>
+      <h3 className="mb-3 font-deva text-lg font-bold text-terracotta-700">
+        {SECTION_TITLE[s.cat]}
+        <span className="ml-2 text-xs font-normal text-ink-700/50">{s.rows.length}</span>
+      </h3>
+      <div className="overflow-x-auto" tabIndex={0} role="group" aria-label={SECTION_TITLE[s.cat]}>
+        <table className="w-full min-w-[300px] border-collapse text-base">
+          <thead>
+            <tr className="text-left text-xs uppercase tracking-[0.06em] text-terracotta-700">
+              <th scope="col" className="border-b border-ink-800/15 px-2 py-1.5 font-semibold">देवनागरी</th>
+              <th scope="col" className="border-b border-ink-800/15 px-2 py-1.5 font-semibold">गोंडी</th>
+              <th scope="col" className="border-b border-ink-800/15 px-2 py-1.5 font-semibold">कोड</th>
+            </tr>
+          </thead>
+          <tbody>
+            {s.rows.map((r) => (
+              <tr key={`${r.gondi}-${r.cp}`} className="odd:bg-white/50">
+                <td className="border-b border-ink-800/10 px-2 py-1.5 font-deva text-ink-800">{r.deva}</td>
+                <td className="border-b border-ink-800/10 px-2 py-1.5 font-gondi text-2xl text-terracotta-700">{r.gondi}</td>
+                <td className="border-b border-ink-800/10 px-2 py-1.5 text-xs text-forest-500">{r.cp}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
 export function CharMapExplorer() {
   const [q, setQ] = useState("");
   const [filter, setFilter] = useState<Category | "all">("all");
@@ -90,6 +124,9 @@ export function CharMapExplorer() {
       .map((cat) => ({ cat, rows: rows.filter((r) => r.cat === cat) }))
       .filter((s) => s.rows.length > 0);
   }, [q, filter]);
+
+  const small = sections.filter((s) => s.cat !== "consonants");
+  const consonants = sections.filter((s) => s.cat === "consonants");
 
   return (
     <div>
@@ -133,35 +170,20 @@ export function CharMapExplorer() {
           इस खोज से मेल खाता कोई अक्षर नहीं मिला।
         </p>
       ) : (
-        <div className="mt-4 grid gap-4 md:grid-cols-2">
-          {sections.map((s) => (
-            <div key={s.cat} className="rounded-2xl border border-earth-500/10 bg-white p-4 shadow-card">
-              <h3 className="mb-3 font-deva text-lg font-bold text-terracotta-700">
-                {SECTION_TITLE[s.cat]}
-              </h3>
-              <div className="overflow-x-auto" tabIndex={0} role="group" aria-label={SECTION_TITLE[s.cat]}>
-                <table className="w-full min-w-[300px] border-collapse text-base">
-                  <thead>
-                    <tr className="text-left text-xs uppercase tracking-[0.06em] text-terracotta-700">
-                      <th scope="col" className="border-b border-ink-800/15 px-2 py-1.5 font-semibold">देवनागरी</th>
-                      <th scope="col" className="border-b border-ink-800/15 px-2 py-1.5 font-semibold">गोंडी</th>
-                      <th scope="col" className="border-b border-ink-800/15 px-2 py-1.5 font-semibold">कोड</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {s.rows.map((r) => (
-                      <tr key={`${r.gondi}-${r.cp}`} className="odd:bg-white/50">
-                        <td className="border-b border-ink-800/10 px-2 py-1.5 font-deva text-ink-800">{r.deva}</td>
-                        <td className="border-b border-ink-800/10 px-2 py-1.5 font-gondi text-2xl text-terracotta-700">{r.gondi}</td>
-                        <td className="border-b border-ink-800/10 px-2 py-1.5 text-xs text-forest-500">{r.cp}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+        <>
+          {/* compact sections keep their natural height */}
+          {small.length > 0 && (
+            <div className="mt-4 grid items-start gap-4 md:grid-cols-2">
+              {small.map((s) => (
+                <SectionCard key={s.cat} s={s} />
+              ))}
             </div>
+          )}
+          {/* long consonant table gets full width */}
+          {consonants.map((s) => (
+            <SectionCard key={s.cat} s={s} className="mt-4" />
           ))}
-        </div>
+        </>
       )}
     </div>
   );
