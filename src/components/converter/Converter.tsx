@@ -21,7 +21,6 @@ import {
   ConverterModeTabs,
   type ConverterDirection,
 } from "./ConverterModeTabs";
-import { UnicodeInspector } from "./UnicodeInspector";
 import { ConverterHistory } from "./ConverterHistory";
 
 export function Converter() {
@@ -30,7 +29,6 @@ export function Converter() {
   const [smartRa, setSmartRa] = useState(true);
   const [keyboardOpen, setKeyboardOpen] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
-  const [inspectChar, setInspectChar] = useState<string | null>(null);
   const [history, setHistory] = useState<HistoryEntry[]>([]);
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -186,7 +184,6 @@ export function Converter() {
             value={output}
             direction={direction}
             unmapped={unmapped}
-            onInspect={setInspectChar}
           />
           <ConverterControls
             onCopy={handleCopy}
@@ -229,9 +226,8 @@ export function Converter() {
         </div>
       </details>
 
-      {/* Unicode Inspector + History */}
-      <div className="mt-4 grid gap-4 lg:grid-cols-2">
-        <UnicodeInspector value={inspectChar} onChange={setInspectChar} />
+      {/* History (local-only) */}
+      <div className="mt-5">
         <ConverterHistory
           entries={history}
           onReuse={handleReuse}
