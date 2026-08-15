@@ -5,24 +5,18 @@ import { usePathname } from "next/navigation";
 import { Mail, MapPin } from "lucide-react";
 import { TreeLogo } from "@/components/brand/TreeLogo";
 
-const SECTIONS = [
-  { href: "/", label: "Home · खोज" },
-  { href: "/browse", label: "Dictionary · श्रेणी" },
-  { href: "/translator", label: "Translator" },
-  { href: "/converter", label: "Converter" },
-  { href: "/grammar", label: "Grammar · व्याकरण" },
-  { href: "/vakya", label: "Sentences · वाक्यांश" },
-  { href: "/script", label: "Script · लिपि" },
-  { href: "/keyboard", label: "कीबोर्ड" },
+const EXPLORE = [
+  { href: "/", label: "Home", deva: false },
+  { href: "/browse", label: "Dictionary", deva: false },
+  { href: "/translator", label: "Translator", deva: false },
+  { href: "/converter", label: "Converter", deva: false },
+  { href: "/grammar", label: "Grammar", deva: false },
+  { href: "/vakya", label: "Sentences", deva: false },
+  { href: "/script", label: "Script", deva: false },
+  { href: "/keyboard", label: "कीबोर्ड", deva: true },
 ];
 
-const ABOUT = [
-  { href: "/about", label: "About · इस वेबसाइट के बारे में" },
-  { href: "/contact", label: "Contact Us · लेखक परिचय" },
-  { href: "/contribute", label: "योगदान · Contribute" },
-];
-
-/** Repeating tribal border strip (pure SVG). */
+/** Repeating tribal border strip (pure SVG, decorative). */
 function TribalStrip({ className = "" }: { className?: string }) {
   return (
     <div aria-hidden className={`overflow-hidden ${className}`}>
@@ -47,7 +41,8 @@ export function SiteFooter() {
     <footer className="mt-16 bg-forest-900 text-cream-100">
       <TribalStrip className="bg-forest-800" />
 
-      <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 md:grid-cols-2 lg:grid-cols-4">
+      <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 md:grid-cols-2 lg:grid-cols-[1.5fr_1fr_1.4fr] lg:gap-14">
+        {/* ---- Brand ---- */}
         <div>
           <div className="flex items-center gap-3">
             <TreeLogo className="h-12 w-12" />
@@ -60,25 +55,34 @@ export function SiteFooter() {
               </p>
             </div>
           </div>
-          <p className="mt-4 font-gondi text-2xl text-gold-300" aria-hidden>
+
+          <p className="mt-5 font-gondi text-2xl leading-snug text-gold-300" aria-hidden>
             𑴤𑴫𑴦𑴱𑴤 𑴎𑴽𑵀𑴘𑴳
           </p>
-          <p className="mt-3 text-sm leading-relaxed text-cream-200/75">
-            A serious digital platform for preserving, learning, searching and promoting
-            the Masaram Gondi language and script — Unicode U+11D00–U+11D5F.
+
+          <p className="mt-3 max-w-sm font-english text-sm leading-relaxed text-cream-200/75">
+            Preserving, learning and exploring the Masaram Gondi language and script.
+          </p>
+
+          <p className="mt-4 max-w-sm font-deva text-xs leading-relaxed text-cream-200/55">
+            स्रोत: <em>गोंडी करीयाट (गोंडी सिखाएं)</em> — uploaded primary source। कोई गोंडी
+            शब्द या नियम अनुमान से नहीं बनाया गया।
           </p>
         </div>
 
-        <nav aria-label="फ़ुटर अनुभाग">
-          <h2 className="text-xs font-semibold uppercase tracking-[0.2em] text-gold-300">
-            Sections
+        {/* ---- Explore ---- */}
+        <nav aria-label="Footer — explore sections">
+          <h2 className="font-english text-xs font-semibold uppercase tracking-[0.22em] text-gold-300">
+            Explore
           </h2>
-          <ul className="mt-4 grid grid-cols-1 gap-2 text-sm sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
-            {SECTIONS.map((n) => (
+          <ul className="mt-4 grid grid-cols-2 gap-x-6 gap-y-2.5 text-sm md:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+            {EXPLORE.map((n) => (
               <li key={n.href}>
                 <Link
                   href={n.href}
-                  className="font-deva text-cream-100/85 underline-offset-4 hover:text-gold-300 hover:underline"
+                  className={`${
+                    n.deva ? "font-deva" : "font-english"
+                  } text-cream-100/85 underline-offset-4 transition hover:text-gold-300 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-400`}
                 >
                   {n.label}
                 </Link>
@@ -87,66 +91,75 @@ export function SiteFooter() {
           </ul>
         </nav>
 
-        <nav aria-label="फ़ुटर परिचय">
-          <h2 className="text-xs font-semibold uppercase tracking-[0.2em] text-gold-300">
-            About
+        {/* ---- About the Creator ---- */}
+        <section aria-labelledby="footer-creator">
+          <h2
+            id="footer-creator"
+            className="font-english text-xs font-semibold uppercase tracking-[0.22em] text-gold-300"
+          >
+            About the Creator
           </h2>
-          <ul className="mt-4 space-y-2 text-sm">
-            {ABOUT.map((n) => (
-              <li key={n.href}>
-                <Link
-                  href={n.href}
-                  className="font-deva text-cream-100/85 underline-offset-4 hover:text-gold-300 hover:underline"
-                >
-                  {n.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-          <p className="mt-4 text-xs leading-relaxed text-cream-200/60">
-            स्रोत: गोंडी करीयाट (गोंडी सिखाएं) — uploaded primary source. कोई गोंडी शब्द
-            अनुमान से नहीं बनाया गया।
-          </p>
-        </nav>
 
-        <div>
-          <h2 className="text-xs font-semibold uppercase tracking-[0.2em] text-gold-300">
-            About Author
-          </h2>
-          <p className="mt-4 font-deva text-base font-semibold text-cream-50">
-            Rajendra Saiyyam
-          </p>
-          <ul className="mt-2 space-y-2 text-sm text-cream-200/80">
-            <li>
-              <a
-                href="mailto:sevajoharsaiyyam@gmail.com"
-                className="inline-flex items-start gap-2 break-all underline-offset-4 hover:text-gold-300 hover:underline"
+          <div className="mt-4 rounded-2xl border border-gold-500/20 bg-forest-800/60 p-5">
+            <div className="flex items-start justify-between gap-3">
+              <p className="font-english text-lg font-bold tracking-tight text-cream-50">
+                Rajendra Saiyyam
+              </p>
+              <span
+                aria-hidden
+                className="select-none font-gondi text-xl leading-none text-gold-500/70"
+                title="Masaram Gondi"
               >
-                <Mail size={15} className="mt-0.5 shrink-0" aria-hidden />
-                sevajoharsaiyyam@gmail.com
-              </a>
-            </li>
-            <li className="flex items-start gap-2">
-              <MapPin size={15} className="mt-0.5 shrink-0" aria-hidden />
-              <span>
-                Naytola (Dorli), Damoh, Birsa,
-                <br />
-                Balaghat, M.P. — India
+                𑴎
               </span>
-            </li>
-          </ul>
-        </div>
+            </div>
+
+            <p className="mt-2 font-english text-[13px] leading-relaxed text-cream-200/75">
+              Creator and maintainer of the Masaram Gondi Script Dictionary, a digital
+              platform focused on preserving, learning and exploring the Masaram Gondi
+              language and script.
+            </p>
+
+            <ul className="mt-4 space-y-2.5 text-sm">
+              <li>
+                <a
+                  href="mailto:sevajoharsaiyyam@gmail.com"
+                  className="group inline-flex max-w-full items-start gap-2.5 underline-offset-4 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-400"
+                >
+                  <Mail
+                    size={15}
+                    aria-hidden
+                    className="mt-0.5 shrink-0 text-gold-400 transition group-hover:text-gold-300"
+                  />
+                  <span className="break-all text-cream-100/90 group-hover:text-gold-300">
+                    sevajoharsaiyyam@gmail.com
+                  </span>
+                </a>
+              </li>
+              <li className="flex items-start gap-2.5">
+                <MapPin size={15} aria-hidden className="mt-0.5 shrink-0 text-gold-400" />
+                <span className="font-english leading-relaxed text-cream-200/80">
+                  Naytola (Dorli), Damoh, Birsa,
+                  <br />
+                  Balaghat, M.P., India
+                </span>
+              </li>
+            </ul>
+          </div>
+        </section>
       </div>
 
+      {/* ---- Bottom bar ---- */}
       <div className="border-t border-gold-500/15">
-        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-2 px-4 py-4 text-sm md:flex-row">
-          <p className="font-deva">
-            Create by <strong className="text-gold-300">Saiyyam Ji</strong>
+        <div className="mx-auto flex max-w-7xl flex-col items-center gap-2 px-4 py-5 text-center md:flex-row md:justify-between md:text-left">
+          <p className="font-english text-sm text-cream-100/90">
+            Created &amp; Maintained by{" "}
+            <strong className="font-semibold text-gold-300">Rajendra Saiyyam</strong>
           </p>
-          <p className="font-deva font-semibold tracking-wide text-gold-400">
-            Jai Seva &nbsp;|&nbsp; Jai Gondwana
+          <p className="font-deva text-xs font-medium tracking-wide text-gold-500/80">
+            Jai Seva&ensp;|&ensp;Jai Gondwana
           </p>
-          <p className="text-xs text-cream-200/60">
+          <p className="font-english text-[11px] text-cream-200/55">
             Munshi Mangal Singh Masaram · 1918 · Unicode U+11D00–U+11D5F
           </p>
         </div>

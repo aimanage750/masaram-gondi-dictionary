@@ -64,7 +64,7 @@ export default function ContactPage() {
       </div>
 
       <p className="mt-6 text-center font-deva text-ink-800">
-        Create by <strong className="text-terracotta-600">Saiyyam Ji</strong>
+        Created &amp; Maintained by <strong className="text-terracotta-600">Rajendra Saiyyam</strong>
       </p>
     </div>
   );

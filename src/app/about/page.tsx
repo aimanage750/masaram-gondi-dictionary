@@ -104,7 +104,7 @@ export default function AboutPage() {
         </section>
 
         <p className="mt-4 border-t border-terracotta-500/15 pt-4 font-deva">
-          Created by <strong>Saiyyam Ji</strong> ·{" "}
+          Created &amp; Maintained by <strong>Rajendra Saiyyam</strong> ·{" "}
           <Link href="/contact" className="text-terracotta-600 underline underline-offset-2">
             Contact Us / लेखक परिचय
           </Link>
