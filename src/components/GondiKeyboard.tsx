@@ -22,6 +22,13 @@ export function GondiKeyboard({
     onChange(value + ch);
   }
 
+  /** Delete one full Unicode code point (Masaram Gondi chars are astral —
+   * a plain .slice(0, -1) would cut them in half and show broken glyphs). */
+  function backspace() {
+    const cps = Array.from(value);
+    onChange(cps.slice(0, -1).join(""));
+  }
+
   return (
     <div className={`rounded-2xl border border-terracotta-500/25 bg-cream-50 p-3 ${className}`}>
       <div className="mb-2 flex items-center justify-between gap-2">
@@ -53,7 +60,8 @@ export function GondiKeyboard({
         </button>
         <button
           type="button"
-          onClick={() => onChange(value.slice(0, -1))}
+          onClick={backspace}
+          aria-label="मिटाएँ (Delete)"
           className="rounded-lg bg-terracotta-500 px-4 py-2 text-cream-50"
         >
           <Delete size={16} />

@@ -44,3 +44,24 @@ export function containsMasaram(text: string): boolean {
   }
   return false;
 }
+
+export type DetectedScript = "deva" | "masaram" | "mixed" | "none";
+
+/**
+ * Detect the dominant script of the input so the converter can switch
+ * direction automatically: typing Masaram Gondi shows Hindi and typing
+ * Hindi/Devanagari shows Masaram Gondi.
+ */
+export function detectScript(text: string): DetectedScript {
+  let deva = 0;
+  let masaram = 0;
+  for (const ch of text) {
+    const cp = ch.codePointAt(0) ?? 0;
+    if (cp >= 0x0900 && cp <= 0x097f) deva += 1;
+    else if (cp >= 0x11d00 && cp <= 0x11d5f) masaram += 1;
+  }
+  if (deva > 0 && masaram === 0) return "deva";
+  if (masaram > 0 && deva === 0) return "masaram";
+  if (deva > 0 && masaram > 0) return "mixed";
+  return "none";
+}

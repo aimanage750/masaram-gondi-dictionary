@@ -12,11 +12,19 @@ export const metadata: Metadata = {
 
 type MapRow = { deva: string; gondi: string; cp: string };
 
+/** Proper Devanagari labels for the special signs (keyboard hints are terse). */
+const SIGN_LABELS: Record<string, string> = {
+  halanta: "हलंता (्)",
+  "् virama": "विराम (्)",
+  repha: "रेफ़ (र्)",
+  "ra-kara": "र-कार (्र)",
+};
+
 function rowsFrom(
   keys: { label: string; value: string; hint?: string }[]
 ): MapRow[] {
   return keys.map((k) => ({
-    deva: k.hint ?? "",
+    deva: k.hint ? SIGN_LABELS[k.hint] ?? k.hint : "",
     gondi: k.label.replace("◌", ""),
     cp: `U+${(k.value.codePointAt(0) ?? 0).toString(16).toUpperCase()}`,
   }));
@@ -70,11 +78,12 @@ export default function ConverterPage() {
           Masaram Gondi Script Converter
         </h1>
         <p className="mt-2 font-deva text-lg text-cream-100/90">
-          हिन्दी / Roman / Gondi → Masaram Gondi Script
+          हिन्दी ⇄ मसराम गोंडी — दोनों दिशाओं में (Hindi ⇄ Masaram Gondi)
         </p>
         <p className="mx-auto mt-2 max-w-2xl font-deva text-sm leading-relaxed text-cream-200/80">
-          हिन्दी टाइप करो — ७५ अक्षरों वाली मसराम गोंडी लिपि में तुरंत लिखो। देवनागरी से मसराम
-          गोंडी और वापस — सब कुछ यूनिकोड में, इसी वेबसाइट के अंदर।
+          हिन्दी टाइप करो — ७५ अक्षरों वाली मसराम गोंडी लिपि में तुरंत लिखो। या मसराम गोंडी
+          लिखो — हिन्दी / देवनागरी में देखो। लिपि अपने आप पहचानी जाती है; कॉपी, बदलो और
+          साफ़ बटन नीचे हैं।
         </p>
         <p className="mt-3 font-gondi text-3xl text-gold-400 md:text-4xl">
           𑴤𑴫𑴦𑴱𑴤 𑴎𑴽𑵀𑴘𑴳

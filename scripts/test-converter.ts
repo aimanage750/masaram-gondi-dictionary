@@ -76,5 +76,26 @@ for (const [a] of pairs) {
   console.log(`  ${ok ? "OK " : "FAIL"}  ${a}: shared ${shared} vs dict ${dict}`);
 }
 
+console.log("\n=== Script auto-detect (typing Gondi → Hindi mode) ===");
+import { detectScript } from "../src/lib/converter/utils";
+check("detect deva", detectScript("नमस्ते"), "deva");
+check("detect masaram", detectScript("𑴟𑴤𑴫𑵅𑴛𑴺"), "masaram");
+check("detect none", detectScript("123 ,."), "none");
+check("detect mixed", detectScript("नमस्ते 𑴟𑴤"), "mixed");
+
+console.log("\n=== Reverse: Masaram Gondi typed → Hindi shown ===");
+check("𑴎𑴽𑵀𑴘𑴳", convertReverse("𑴎𑴽𑵀𑴘𑴳"), "गोंडी");
+check("𑴤𑴫𑴦𑴱𑴤", convertReverse("𑴤𑴫𑴦𑴱𑴤"), "मसराम");
+check("𑴛𑴧𑵅𑴧𑴱", convertReverse("𑴛𑴧𑵅𑴧𑴱"), "तल्ला");
+check("repha word", convertReverse(convert("कर्म")), "कर्म");
+check("rakara word", convertReverse(convert("क्रम")), "क्रम");
+
+console.log("\n=== Astral-safe backspace (keyboard delete) ===");
+function backspace(value: string): string {
+  return Array.from(value).slice(0, -1).join("");
+}
+check("delete gondi char", backspace("𑴎𑴽"), "𑴎");
+check("delete last gondi char → empty, no broken surrogate", backspace("𑴎"), "");
+
 console.log(failed === 0 ? "\nALL PASSED ✅" : `\n${failed} FAILED ❌`);
 process.exit(failed === 0 ? 0 : 1);
