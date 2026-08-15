@@ -18,10 +18,10 @@ export function ConverterControls({
   hasOutput: boolean;
 }) {
   const btn =
-    "inline-flex min-h-[44px] items-center justify-center gap-1.5 rounded-xl px-4 py-2.5 text-sm font-medium transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta-500 disabled:cursor-not-allowed disabled:opacity-45";
+    "inline-flex min-h-[44px] w-full items-center justify-center gap-1.5 rounded-xl px-4 py-2.5 text-sm font-medium transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta-500 disabled:cursor-not-allowed disabled:opacity-45 sm:w-auto";
 
   return (
-    <div className="mt-3 flex flex-wrap items-center gap-2">
+    <div className="mt-4 grid grid-cols-1 gap-2 sm:flex sm:flex-wrap sm:items-center">
       <button
         type="button"
         onClick={onCopy}

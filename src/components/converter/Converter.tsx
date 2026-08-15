@@ -168,7 +168,7 @@ export function Converter() {
           />
         </div>
 
-        <div className="flex items-center justify-center">
+        <div className="flex items-center justify-center py-1 md:py-0">
           <button
             type="button"
             onClick={handleSwap}
@@ -203,8 +203,8 @@ export function Converter() {
       </div>
 
       {/* Advanced settings */}
-      <details className="group mt-4 rounded-2xl border border-earth-500/10 bg-white shadow-card">
-        <summary className="flex cursor-pointer list-none items-center gap-2 rounded-2xl px-5 py-3.5 font-english text-sm font-semibold text-forest-600 hover:bg-cream-100 focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-terracotta-500">
+      <details className="group mt-6 rounded-2xl border border-earth-500/10 bg-white shadow-card">
+        <summary className="flex cursor-pointer list-none items-center gap-2 px-5 py-4 font-english text-sm font-semibold text-forest-600 hover:text-terracotta-600 focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-terracotta-500">
           <Settings2 size={16} aria-hidden />
           Advanced Settings · एडवांस्ड सेटिंग्स
           <span aria-hidden className="ml-auto text-ink-700/50 transition group-open:rotate-180">▾</span>
