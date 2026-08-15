@@ -1,71 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Converter } from "@/components/converter/Converter";
-import { KEYBOARD_LAYOUT } from "@/lib/mapping/masaram";
+import { CharMapExplorer } from "@/components/converter/CharMapExplorer";
+import { devanagariToMasaram } from "@/lib/mapping/masaram";
 
 export const metadata: Metadata = {
   title: "Masaram Gondi Script Converter",
   description:
-    "Hindi, Roman and supported language input to Masaram Gondi script conversion. देवनागरी → मसराम गोंडी यूनिकोड कन्वर्टर (U+11D00–U+11D5F)।",
+    "Hindi/Devanagari ↔ Masaram Gondi Unicode conversion with Unicode inspector, character map and on-screen keyboard. देवनागरी ⇄ मसराम गोंडी यूनिकोड कन्वर्टर (U+11D00–U+11D5F) — verified 1:1 mapping, no AI guesses.",
   alternates: { canonical: "/converter" },
 };
-
-type MapRow = { deva: string; gondi: string; cp: string };
-
-/** Proper Devanagari labels for the special signs (keyboard hints are terse). */
-const SIGN_LABELS: Record<string, string> = {
-  halanta: "हलंता (्)",
-  "् virama": "विराम (्)",
-  repha: "रेफ़ (र्)",
-  "ra-kara": "र-कार (्र)",
-};
-
-function rowsFrom(
-  keys: { label: string; value: string; hint?: string }[]
-): MapRow[] {
-  return keys.map((k) => ({
-    deva: k.hint ? SIGN_LABELS[k.hint] ?? k.hint : "",
-    gondi: k.label.replace("◌", ""),
-    cp: `U+${(k.value.codePointAt(0) ?? 0).toString(16).toUpperCase()}`,
-  }));
-}
-
-const VOWELS = rowsFrom(KEYBOARD_LAYOUT.vowels);
-const CONSONANTS = rowsFrom(KEYBOARD_LAYOUT.consonants);
-const SIGNS = rowsFrom(KEYBOARD_LAYOUT.signs);
-const DIGITS = rowsFrom(KEYBOARD_LAYOUT.digits);
-const MATRAS = SIGNS.filter((r) => r.deva.length === 1 && "ािीुूृेैोौंः़ॅ".includes(r.deva));
-const SPECIALS = SIGNS.filter((r) => !MATRAS.includes(r));
-
-function MapTable({ title, rows }: { title: string; rows: MapRow[] }) {
-  return (
-    <div className="rounded-2xl border border-earth-500/10 bg-white p-4 shadow-card">
-      <h3 className="mb-3 font-deva text-lg font-bold text-terracotta-700">{title}</h3>
-      <div className="overflow-x-auto">
-        <table className="w-full min-w-[320px] border-collapse text-base">
-          <thead>
-            <tr className="text-left text-xs uppercase tracking-[0.06em] text-terracotta-700">
-              <th scope="col" className="border-b border-ink-800/15 px-2 py-1.5 font-semibold">देवनागरी</th>
-              <th scope="col" className="border-b border-ink-800/15 px-2 py-1.5 font-semibold">गोंडी</th>
-              <th scope="col" className="border-b border-ink-800/15 px-2 py-1.5 font-semibold">कोड</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((r) => (
-              <tr key={`${r.gondi}-${r.cp}`} className="odd:bg-white/50">
-                <td className="border-b border-ink-800/10 px-2 py-1.5 font-deva text-ink-800">{r.deva}</td>
-                <td className="border-b border-ink-800/10 px-2 py-1.5 font-gondi text-2xl text-terracotta-700">
-                  {r.gondi}
-                </td>
-                <td className="border-b border-ink-800/10 px-2 py-1.5 text-xs text-forest-500">{r.cp}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  );
-}
 
 export default function ConverterPage() {
   return (
@@ -78,15 +22,15 @@ export default function ConverterPage() {
           Masaram Gondi Script Converter
         </h1>
         <p className="mt-2 font-deva text-lg text-terracotta-500">
-          हिन्दी ⇄ मसराम गोंडी — दोनों दिशाओं में (Hindi ⇄ Masaram Gondi)
+          हिन्दी ⇄ मसराम गोंडी — Script Converter &amp; Unicode Tool
         </p>
         <p className="mx-auto mt-2 max-w-2xl font-deva text-sm leading-relaxed text-ink-700">
           हिन्दी टाइप करो — ७५ अक्षरों वाली मसराम गोंडी लिपि में तुरंत लिखो। या मसराम गोंडी
-          लिखो — हिन्दी / देवनागरी में देखो। लिपि अपने आप पहचानी जाती है; कॉपी, बदलो और
-          साफ़ बटन नीचे हैं।
+          लिखो — हिन्दी / देवनागरी में देखो। लिपि अपने आप पहचानी जाती है। कॉपी, swap,
+          download, share, Unicode inspector और local history — सब इसी पेज पर।
         </p>
         <p className="mt-3 font-gondi text-3xl text-forest-600 md:text-4xl">
-          𑴤𑴫𑴦𑴱𑴤 𑴎𑴽𑵀𑴘𑴳
+          {devanagariToMasaram("मसराम गोंडी")}
         </p>
       </section>
 
@@ -106,14 +50,11 @@ export default function ConverterPage() {
         <h2 id="map-heading" className="mt-8 font-display text-2xl font-bold text-forest-600">
           अक्षर मानचित्र <span className="text-base font-normal text-ink-700/70">· Character map</span>
         </h2>
-        <div className="mt-4 grid gap-4 md:grid-cols-2">
-          <MapTable title="स्वर" rows={VOWELS} />
-          <MapTable title="मात्राएँ" rows={MATRAS} />
-          <MapTable title="चिह्न / संयुक्त" rows={SPECIALS} />
-          <MapTable title="अंक" rows={DIGITS} />
-        </div>
+        <p className="mt-1 text-sm text-ink-700/70">
+          खोजें Devanagari, मसराम गोंडी अक्षर या Unicode code point से; category filter के साथ।
+        </p>
         <div className="mt-4">
-          <MapTable title="व्यंजन" rows={CONSONANTS} />
+          <CharMapExplorer />
         </div>
       </section>
 

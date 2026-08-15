@@ -1,41 +1,31 @@
 "use client";
 
-import { Keyboard, KeyboardOff } from "lucide-react";
+import Link from "next/link";
 import { GondiKeyboard } from "@/components/GondiKeyboard";
 
 /**
- * Optional on-screen keyboard for the converter input.
- * Reuses the existing GondiKeyboard component (Devanagari pronunciation
- * keys or direct Masaram Gondi keys) — no duplicated layout data.
+ * On-screen Masaram Gondi keyboard for the converter input.
+ * Reuses the existing GondiKeyboard component + KEYBOARD_LAYOUT —
+ * the single source of truth for key mappings.
  */
 export function ConverterKeyboard({
-  open,
-  onToggle,
   value,
   onChange,
 }: {
-  open: boolean;
-  onToggle: () => void;
   value: string;
   onChange: (next: string) => void;
 }) {
   return (
-    <div className="mt-4">
-      <button
-        type="button"
-        onClick={onToggle}
-        aria-expanded={open}
-        aria-controls="converter-keyboard"
-        className="inline-flex min-h-[44px] items-center gap-2 rounded-xl border border-terracotta-500/40 px-4 py-2 text-sm font-medium text-terracotta-600 hover:bg-terracotta-500/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta-500"
-      >
-        {open ? <KeyboardOff size={16} /> : <Keyboard size={16} />}
-        {open ? "कीबोर्ड छिपाओ" : "कीबोर्ड से लिखो"}
-      </button>
-      {open && (
-        <div id="converter-keyboard" className="mt-3">
-          <GondiKeyboard value={value} onChange={onChange} />
-        </div>
-      )}
+    <div className="rounded-2xl border border-earth-500/10 bg-cream-100/70 p-3">
+      <GondiKeyboard value={value} onChange={onChange} />
+      <p className="mt-2 text-right">
+        <Link
+          href="/keyboard"
+          className="inline-flex min-h-[36px] items-center gap-1 rounded-lg px-2 text-sm font-medium text-terracotta-600 underline-offset-2 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta-500"
+        >
+          Open Full Keyboard →
+        </Link>
+      </p>
     </div>
   );
 }
