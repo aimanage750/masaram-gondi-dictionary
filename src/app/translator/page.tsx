@@ -17,6 +17,7 @@ export default function TranslatorPage() {
         title="Hindi ⇄ English ⇄ Masaram Gondi"
         sub="शब्दकोश-आधारित तुरंत अनुवाद — अपलोड की गई पुस्तक के प्रकाशित शब्दों से।"
         divider
+        level="h1"
       />
       <div className="mt-10">
         <TranslatorClient />

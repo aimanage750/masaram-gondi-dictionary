@@ -56,6 +56,7 @@ export default function ScriptPage() {
         title="मसराम गोंडी लिपि सीखें"
         sub="मुंशी मंगल सिंह मसराम (1918) द्वारा रचित लिपि — ७५ अक्षर · Unicode U+11D00–U+11D5F। बड़े अक्षर, उच्चारण-संकेत और कोड के साथ।"
         divider
+        level="h1"
       />
 
       <div className="mx-auto mt-8 max-w-3xl rounded-3xl border border-earth-500/10 bg-white p-6 text-center shadow-card">

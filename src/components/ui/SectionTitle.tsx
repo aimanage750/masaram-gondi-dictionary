@@ -1,20 +1,24 @@
 import { CulturalDivider } from "./CulturalDivider";
 
-/** Consistent section heading: kicker + title + optional divider. */
+/** Consistent section heading: kicker + title + optional divider.
+ * `level` picks the heading element — page-level titles use "h1". */
 export function SectionTitle({
   kicker,
   title,
   sub,
   divider = false,
   tone = "light",
+  level = "h2",
 }: {
   kicker?: string;
   title: string;
   sub?: string;
   divider?: boolean;
   tone?: "light" | "dark";
+  level?: "h1" | "h2";
 }) {
   const onDark = tone === "dark";
+  const Heading = level;
   return (
     <div className="text-center">
       {kicker && (
@@ -26,13 +30,13 @@ export function SectionTitle({
           {kicker}
         </p>
       )}
-      <h2
+      <Heading
         className={`mt-2 font-display text-2xl md:text-3xl ${
           onDark ? "text-cream-50" : "text-forest-600"
         }`}
       >
         {title}
-      </h2>
+      </Heading>
       {sub && (
         <p
           className={`mx-auto mt-2 max-w-2xl font-deva text-sm leading-relaxed md:text-base ${

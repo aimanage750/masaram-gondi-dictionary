@@ -1,4 +1,4 @@
-const CACHE = "mgd-v3";
+const CACHE = "mgd-v4";
 const PRECACHE = [
   "/",
   "/browse",
@@ -9,6 +9,9 @@ const PRECACHE = [
   "/script",
   "/grammar",
   "/contact",
+  "/contribute",
+  "/report",
+  "/vakya",
   "/offline.html",
   "/manifest.json",
 ];

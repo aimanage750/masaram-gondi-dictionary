@@ -53,6 +53,31 @@ export const metadata: Metadata = {
     "Unicode 11D00",
   ],
   appleWebApp: { capable: true, title: "Masaram Gondi", statusBarStyle: "default" },
+  openGraph: {
+    type: "website",
+    siteName: "Masaram Gondi Script Dictionary",
+    locale: "hi_IN",
+    title: "Masaram Gondi Script Dictionary",
+    description:
+      "Search Gondi words in Masaram Gondi script, Devanagari pronunciation, Hindi and English; translate, convert and learn the script. Preserving Our Language • Our Identity.",
+    url: "https://masaram-gondi-script-platform.vercel.app",
+    images: [
+      {
+        url: "/img/hero-landscape.jpg",
+        width: 1823,
+        height: 863,
+        alt: "Masaram Gondi Script Dictionary",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Masaram Gondi Script Dictionary",
+    description:
+      "Search Gondi words in Masaram Gondi script, Devanagari, Hindi and English. Preserving Our Language • Our Identity.",
+    images: ["/img/hero-landscape.jpg"],
+  },
+  metadataBase: new URL("https://masaram-gondi-script-platform.vercel.app"),
 };
 
 export const viewport: Viewport = {

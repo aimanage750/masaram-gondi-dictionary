@@ -271,6 +271,9 @@ body {
 .dark .hover\:bg-cream-200:hover { background-color: #2f271e; }
 .dark .hover\:bg-cream-300:hover { background-color: #3a3024; }
 .dark .border-cream-200 { border-color: #3b3227; }
+/* Home hero gradient fade — follows the dark page background. */
+.dark .from-cream-100\/60 { --tw-gradient-from: rgb(30 25 21 / 0.6) var(--tw-gradient-from-position); --tw-gradient-to: rgb(30 25 21 / 0) var(--tw-gradient-to-position); --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to); }
+.dark .to-cream-100 { --tw-gradient-to: #171310 var(--tw-gradient-to-position); }
 
 /* Warm paper note boxes → warm dark tint (kept in sync with ochre accent). */
 .note-paper { background-color: #fff1cc; }

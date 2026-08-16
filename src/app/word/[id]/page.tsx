@@ -10,10 +10,18 @@ export const dynamic = "force-dynamic";
 export async function generateMetadata({ params }: { params: { id: string } }) {
   const entry = await getEntry(params.id);
   if (!entry || entry.status !== "published") return {};
+  const title = `${entry.gondi_pronunciation} — ${entry.roman_gondi} — ${entry.hindi} — ${entry.english}`;
+  const description = `Dictionary entry for the Masaram Gondi word ${entry.gondi_script} (${entry.gondi_pronunciation} / ${entry.roman_gondi}): Hindi ${entry.hindi}, English ${entry.english}. Verified script, pronunciation and meaning.`;
   const metadata: Metadata = {
-    title: `${entry.gondi_pronunciation} — ${entry.roman_gondi} — ${entry.hindi} — ${entry.english}`,
-    description: `Dictionary entry for the Masaram Gondi word ${entry.gondi_script} (${entry.gondi_pronunciation} / ${entry.roman_gondi}): Hindi ${entry.hindi}, English ${entry.english}. Verified script, pronunciation and meaning.`,
+    title,
+    description,
     alternates: { canonical: `/word/${entry.id}` },
+    openGraph: {
+      title: `${title} · Masaram Gondi Dictionary`,
+      description,
+      url: `/word/${entry.id}`,
+      type: "article",
+    },
   };
   return metadata;
 }
