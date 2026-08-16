@@ -41,7 +41,7 @@ function onVercel(): boolean {
 export function persistHint(): string {
   if (!onVercel()) return "";
   if (storeToken()) return "";
-  return "Vercel डिस्क पर सेव टिकता नहीं। Dashboard → Settings → Environment Variables में GITHUB_STORE_TOKEN डालो (GitHub Contents write), फिर Redeploy।";
+  return "Vercel पर local disk persistent नहीं है। Dashboard → Settings → Environment Variables में GITHUB_STORE_TOKEN (GitHub Contents write) या Supabase configure करके फिर Redeploy करें।";
 }
 
 async function readFileSafe(file: string): Promise<LocalDB | null> {
@@ -145,10 +145,22 @@ export async function readPersisted(): Promise<LocalDB | null> {
     }
   }
 
-  const local = (await readFileSafe(DB_FILE)) || (await readFileSafe(TMP_FILE));
-  if (local && local.entries.length > 0) {
-    g.__gondiDb = { db: local, at: now };
-    return local;
+  // Vercel deployment filesystems are read-only/non-persistent. Never use the
+  // bundled data/ directory as a runtime write target in production.
+  if (!onVercel()) {
+    const local = await readFileSafe(DB_FILE);
+    if (local && local.entries.length > 0) {
+      g.__gondiDb = { db: local, at: now };
+      return local;
+    }
+  }
+
+  // /tmp is best-effort only and is intentionally read only as a short-lived
+  // fallback. It is not treated as durable storage.
+  const tmp = await readFileSafe(TMP_FILE);
+  if (tmp && tmp.entries.length > 0) {
+    g.__gondiDb = { db: tmp, at: now };
+    return tmp;
   }
   return null;
 }
@@ -156,6 +168,7 @@ export async function readPersisted(): Promise<LocalDB | null> {
 export async function writePersisted(db: LocalDB) {
   g.__gondiDb = { db, sha: g.__gondiDb?.sha, at: Date.now() };
 
+  // Persistent remote storage is the only supported write path on Vercel.
   if (storeToken()) {
     const ok = await githubPut(db, g.__gondiDb.sha);
     if (ok) {
@@ -165,16 +178,12 @@ export async function writePersisted(db: LocalDB) {
     }
   }
 
-  try {
-    await writeFileSafe(onVercel() ? TMP_FILE : DB_FILE, db);
-  } catch (e) {
-    if (onVercel()) {
-      throw new Error(persistHint() || (e as Error).message);
-    }
-    throw e;
-  }
-
-  if (onVercel() && !storeToken()) {
+  // Never attempt to write into the deployed filesystem on Vercel. This
+  // prevents EROFS errors and avoids giving the false impression that data is
+  // persistent when it is not.
+  if (onVercel()) {
     throw new Error(persistHint());
   }
+
+  await writeFileSafe(DB_FILE, db);
 }
