@@ -1,14 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Keyboard, Shuffle } from "lucide-react";
+import { Keyboard } from "lucide-react";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import { CulturalDivider } from "@/components/ui/CulturalDivider";
+import { CharMapExplorer } from "@/components/CharMapExplorer";
 import { KEYBOARD_LAYOUT, devanagariToMasaram } from "@/lib/mapping/masaram";
 
 export const metadata: Metadata = {
   title: "Script Learning · लिपि सीखें",
   description:
-    "Learn the Masaram Gondi script — vowels (स्वर), consonants (व्यंजन), vowel signs (मात्राएँ), signs and numbers. 75 characters, Unicode U+11D00–U+11D5F, created by Munshi Mangal Singh Masaram (1918).",
+    "Learn the Masaram Gondi script — vowels (स्वर), consonants (व्यंजन), vowel signs (मात्राएँ), signs and numbers — plus the searchable अक्षर मानचित्र Character Map to copy any character. 75 characters, Unicode U+11D00–U+11D5F, created by Munshi Mangal Singh Masaram (1918).",
   alternates: { canonical: "/script" },
 };
 
@@ -72,12 +73,6 @@ export default function ScriptPage() {
           >
             <Keyboard size={16} aria-hidden /> कीबोर्ड से अभ्यास करें
           </Link>
-          <Link
-            href="/converter"
-            className="inline-flex min-h-[44px] items-center gap-2 rounded-full border border-terracotta-500/40 px-5 py-2.5 text-sm font-semibold text-terracotta-600 hover:bg-terracotta-500/10"
-          >
-            <Shuffle size={16} aria-hidden /> Converter खोलें
-          </Link>
         </div>
       </div>
 
@@ -95,6 +90,29 @@ export default function ScriptPage() {
         keys={KEYBOARD_LAYOUT.signs}
       />
       <Section id="ank" title="अंक · Numbers" sub="० → 𑵐 … ९ → 𑵙" keys={KEYBOARD_LAYOUT.digits} />
+
+      <section aria-labelledby="map-heading" className="mt-12">
+        <div className="flex flex-wrap items-baseline gap-3">
+          <h2 id="map-heading" className="font-display text-2xl text-forest-600">
+            अक्षर मानचित्र <span className="text-base font-normal text-ink-700/70">· Character Map</span>
+          </h2>
+        </div>
+        <p className="mt-2 max-w-3xl text-sm leading-relaxed text-ink-700/80">
+          Explore Masaram Gondi characters and copy individual characters for use in text — खोजें
+          Devanagari, मसराम गोंडी अक्षर या Unicode code point से; category filter के साथ। हर अक्षर
+          असली Unicode है — कॉपी करें और कहीं भी paste करें।
+        </p>
+        <div className="mt-4 rounded-2xl border-l-4 border-ochre-500 bg-[#fff1cc] p-4 text-sm leading-relaxed text-ink-700">
+          दोनों लिपियाँ ब्राह्मी-शैली की अबुगिदा हैं, इसलिए १:१ ध्वनि-मानचित्र बनता है। मसराम में
+          विराम (<span className="font-gondi text-base">𑵅</span>) युक्ताक्षर बनाता है, हलंता (
+          <span className="font-gondi text-base">𑵄</span>) सिर्फ़ स्वर मारता है। र् → रेफ़{" "}
+          <span className="font-gondi text-base">𑵆</span>, ्र → र-कार{" "}
+          <span className="font-gondi text-base">𑵇</span>।
+        </div>
+        <div className="mt-4">
+          <CharMapExplorer />
+        </div>
+      </section>
 
       <div className="mt-14">
         <CulturalDivider className="text-terracotta-500" />

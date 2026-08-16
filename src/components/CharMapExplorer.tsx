@@ -1,8 +1,9 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { Search } from "lucide-react";
+import { useMemo, useRef, useState } from "react";
+import { Check, Copy, Search } from "lucide-react";
 import { KEYBOARD_LAYOUT } from "@/lib/mapping/masaram";
+import { copyText } from "@/lib/converter/utils";
 
 type Category = "vowels" | "consonants" | "matras" | "signs" | "digits";
 
@@ -80,7 +81,17 @@ function matches(r: Row, q: string): boolean {
 }
 
 /** One category table; height always fits its own rows (no stretching). */
-function SectionCard({ s, className = "" }: { s: { cat: Category; rows: Row[] }; className?: string }) {
+function SectionCard({
+  s,
+  className = "",
+  copied,
+  onCopy,
+}: {
+  s: { cat: Category; rows: Row[] };
+  className?: string;
+  copied: string | null;
+  onCopy: (r: Row) => void;
+}) {
   return (
     <div className={`rounded-2xl border border-earth-500/10 bg-white p-4 shadow-card ${className}`}>
       <h3 className="mb-3 font-deva text-lg font-bold text-terracotta-700">
@@ -88,22 +99,50 @@ function SectionCard({ s, className = "" }: { s: { cat: Category; rows: Row[] };
         <span className="ml-2 text-xs font-normal text-ink-700/50">{s.rows.length}</span>
       </h3>
       <div className="overflow-x-auto" tabIndex={0} role="group" aria-label={SECTION_TITLE[s.cat]}>
-        <table className="w-full min-w-[300px] border-collapse text-base">
+        <table className="w-full min-w-[340px] border-collapse text-base">
           <thead>
             <tr className="text-left text-xs uppercase tracking-[0.06em] text-terracotta-700">
               <th scope="col" className="border-b border-ink-800/15 px-2 py-1.5 font-semibold">देवनागरी</th>
               <th scope="col" className="border-b border-ink-800/15 px-2 py-1.5 font-semibold">गोंडी</th>
               <th scope="col" className="border-b border-ink-800/15 px-2 py-1.5 font-semibold">कोड</th>
+              <th scope="col" className="border-b border-ink-800/15 px-2 py-1.5 font-semibold">
+                <span className="sr-only">Copy character</span>कॉपी
+              </th>
             </tr>
           </thead>
           <tbody>
-            {s.rows.map((r) => (
-              <tr key={`${r.gondi}-${r.cp}`} className="odd:bg-white/50">
-                <td className="border-b border-ink-800/10 px-2 py-1.5 font-deva text-ink-800">{r.deva}</td>
-                <td className="border-b border-ink-800/10 px-2 py-1.5 font-gondi text-2xl text-terracotta-700">{r.gondi}</td>
-                <td className="border-b border-ink-800/10 px-2 py-1.5 text-xs text-forest-500">{r.cp}</td>
-              </tr>
-            ))}
+            {s.rows.map((r) => {
+              const isCopied = copied === r.cp;
+              return (
+                <tr key={`${r.gondi}-${r.cp}`} className="odd:bg-white/50">
+                  <td className="border-b border-ink-800/10 px-2 py-1.5 font-deva text-ink-800">{r.deva}</td>
+                  <td className="border-b border-ink-800/10 px-2 py-1.5 font-gondi text-2xl text-terracotta-700">{r.gondi}</td>
+                  <td className="border-b border-ink-800/10 px-2 py-1.5 text-xs text-forest-500">{r.cp}</td>
+                  <td className="border-b border-ink-800/10 px-2 py-1.5">
+                    <button
+                      type="button"
+                      onClick={() => onCopy(r)}
+                      aria-label={`Copy Masaram Gondi character ${r.cp}${r.deva ? ` (${r.deva})` : ""}`}
+                      className={`inline-flex min-h-[32px] items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-semibold transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-terracotta-500 ${
+                        isCopied
+                          ? "bg-forest-600 text-cream-50"
+                          : "bg-cream-200 text-ink-800 hover:bg-terracotta-500/15 hover:text-terracotta-700"
+                      }`}
+                    >
+                      {isCopied ? (
+                        <>
+                          <Check size={11} aria-hidden /> Copied
+                        </>
+                      ) : (
+                        <>
+                          <Copy size={11} aria-hidden /> Copy
+                        </>
+                      )}
+                    </button>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
@@ -114,6 +153,21 @@ function SectionCard({ s, className = "" }: { s: { cat: Category; rows: Row[] };
 export function CharMapExplorer() {
   const [q, setQ] = useState("");
   const [filter, setFilter] = useState<Category | "all">("all");
+  const [copied, setCopied] = useState<string | null>(null);
+  const [toast, setToast] = useState<string | null>(null);
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  async function handleCopy(r: Row) {
+    const ok = await copyText(r.gondi);
+    if (!ok) return;
+    setCopied(r.cp);
+    setToast(`✓ ${r.gondi} Copied · कॉपी हो गया`);
+    if (timer.current) clearTimeout(timer.current);
+    timer.current = setTimeout(() => {
+      setCopied(null);
+      setToast(null);
+    }, 1400);
+  }
 
   const sections = useMemo(() => {
     const rows = ALL_ROWS.filter(
@@ -129,7 +183,18 @@ export function CharMapExplorer() {
   const consonants = sections.filter((s) => s.cat === "consonants");
 
   return (
-    <div>
+    <div className="relative">
+      {/* Copy feedback — appears automatically, disappears after ~1.4s */}
+      <div aria-live="polite" role="status" className="pointer-events-none sticky top-2 z-10 flex justify-center">
+        <span
+          className={`rounded-full bg-ink-900 px-4 py-1.5 text-sm text-cream-50 shadow-card transition-opacity ${
+            toast ? "opacity-100" : "opacity-0"
+          }`}
+        >
+          {toast ?? ""}
+        </span>
+      </div>
+
       {/* search + filters */}
       <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
         <div className="relative flex-1">
@@ -175,13 +240,13 @@ export function CharMapExplorer() {
           {small.length > 0 && (
             <div className="mt-4 grid items-start gap-4 md:grid-cols-2">
               {small.map((s) => (
-                <SectionCard key={s.cat} s={s} />
+                <SectionCard key={s.cat} s={s} copied={copied} onCopy={handleCopy} />
               ))}
             </div>
           )}
           {/* long consonant table gets full width */}
           {consonants.map((s) => (
-            <SectionCard key={s.cat} s={s} className="mt-4" />
+            <SectionCard key={s.cat} s={s} copied={copied} onCopy={handleCopy} className="mt-4" />
           ))}
         </>
       )}

@@ -1,13 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Converter } from "@/components/converter/Converter";
-import { CharMapExplorer } from "@/components/converter/CharMapExplorer";
 import { devanagariToMasaram } from "@/lib/mapping/masaram";
 
 export const metadata: Metadata = {
   title: "Masaram Gondi Script Converter",
   description:
-    "Hindi/Devanagari ↔ Masaram Gondi Unicode conversion with Unicode inspector, character map and on-screen keyboard. देवनागरी ⇄ मसराम गोंडी यूनिकोड कन्वर्टर (U+11D00–U+11D5F) — verified 1:1 mapping, no AI guesses.",
+    "Hindi/Devanagari ↔ Masaram Gondi Unicode conversion with copy, swap, download, share and local history. देवनागरी ⇄ मसराम गोंडी यूनिकोड कन्वर्टर (U+11D00–U+11D5F) — verified 1:1 mapping, no AI guesses. Character map: see the Script page.",
   alternates: { canonical: "/converter" },
 };
 
@@ -36,26 +35,6 @@ export default function ConverterPage() {
 
       <section aria-label="Converter" className="mt-8">
         <Converter />
-      </section>
-
-      <section aria-labelledby="map-heading" className="mt-12">
-        <div className="rounded-2xl border-l-4 border-ochre-500 bg-[#fff1cc] p-4 text-sm leading-relaxed text-ink-700">
-          दोनों लिपियाँ ब्राह्मी-शैली की अबुगिदा हैं, इसलिए १:१ ध्वनि-मानचित्र बनता है। मसराम में
-          विराम (<span className="font-gondi text-base">𑵅</span>) युक्ताक्षर बनाता है, हलंता (
-          <span className="font-gondi text-base">𑵄</span>) सिर्फ़ स्वर मारता है। र् → रेफ़{" "}
-          <span className="font-gondi text-base">𑵆</span>, ्र → र-कार{" "}
-          <span className="font-gondi text-base">𑵇</span>।
-        </div>
-
-        <h2 id="map-heading" className="mt-8 font-display text-2xl font-bold text-forest-600">
-          अक्षर मानचित्र <span className="text-base font-normal text-ink-700/70">· Character map</span>
-        </h2>
-        <p className="mt-1 text-sm text-ink-700/70">
-          खोजें Devanagari, मसराम गोंडी अक्षर या Unicode code point से; category filter के साथ।
-        </p>
-        <div className="mt-4">
-          <CharMapExplorer />
-        </div>
       </section>
 
       <section className="mt-10 text-center">
