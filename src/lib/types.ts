@@ -113,6 +113,79 @@ export interface Contribution extends DictionaryEntry {
   details?: ContributionDetails;
 }
 
+/* ------------------------- Phase 5: error reports ------------------------- */
+
+export type ReportStatus =
+  | "pending"
+  | "investigating"
+  | "corrected"
+  | "rejected"
+  | "duplicate"
+  | "resolved";
+
+/** Allowed error-type codes for dictionary reports. */
+export const ERROR_TYPES = [
+  "gondi_word",
+  "roman_gondi",
+  "masaram_gondi",
+  "hindi_word",
+  "english_word",
+  "hindi_meaning",
+  "english_meaning",
+  "pronunciation",
+  "hindi_example",
+  "english_example",
+  "gondi_example",
+  "source",
+  "typo",
+  "duplicate",
+  "other",
+] as const;
+
+export type ErrorType = (typeof ERROR_TYPES)[number];
+
+/** A public error report against the dictionary. Reports NEVER modify the
+ * dictionary — every field a user supplies is a suggestion ("USER
+ * SUGGESTION"), stored for future admin/author review. The `reported_*`
+ * fields are a server-side snapshot of the REAL entry at report time.
+ * Reporter name/email are private and must never be rendered publicly. */
+export interface DictionaryReport {
+  id: string;
+  dictionary_entry_id: string | null;
+  // Snapshot of the entry as stored in the database (audit trail).
+  reported_gondi_devanagari: string | null;
+  reported_roman_gondi: string | null;
+  reported_masaram_gondi: string | null;
+  reported_hindi: string | null;
+  reported_english: string | null;
+  error_types: ErrorType[];
+  description: string;
+  suggested_correction: string | null;
+  // User suggestions — never applied automatically.
+  correct_gondi_devanagari: string | null;
+  correct_roman_gondi: string | null;
+  correct_masaram_gondi: string | null;
+  correct_hindi: string | null;
+  correct_english: string | null;
+  correct_pronunciation: string | null;
+  correct_hindi_definition: string | null;
+  correct_english_definition: string | null;
+  correct_hindi_example: string | null;
+  correct_english_example: string | null;
+  correct_gondi_example: string | null;
+  source_type: string | null;
+  source_name: string | null;
+  source_author: string | null;
+  source_page: string | null;
+  source_url: string | null;
+  evidence: string | null;
+  reporter_name: string | null;
+  reporter_email: string | null;
+  status: ReportStatus;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface AuditEvent {
   id: string;
   actor: string;

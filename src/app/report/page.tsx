@@ -1,117 +1,83 @@
-"use client";
+import type { Metadata } from "next";
+import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
+import { getEntry } from "@/lib/data/store";
+import { ReportForm, type ReportedWord } from "@/components/report/ReportForm";
 
-import { FormEvent, useEffect, useState } from "react";
-import { Flag } from "lucide-react";
+export const metadata: Metadata = {
+  title: "Report a Dictionary Error · शब्दकोश में गलती की रिपोर्ट करें",
+  description:
+    "Found an incorrect word, meaning, spelling, pronunciation or other information? Help us improve the Masaram Gondi Dictionary. Reports are reviewed before any correction is made.",
+  alternates: { canonical: "/report" },
+};
 
-/**
- * Report an Error — reuses the existing /api/contribute pipeline
- * (no new backend). The report is stored as a pending contribution
- * clearly marked "ERROR REPORT".
- */
-export default function ReportPage() {
-  const [csrf, setCsrf] = useState("");
-  const [gondi, setGondi] = useState("");
-  const [hindi, setHindi] = useState("");
-  const [english, setEnglish] = useState("");
-  const [problem, setProblem] = useState("");
-  const [name, setName] = useState("");
-  const [msg, setMsg] = useState<string | null>(null);
-  const [err, setErr] = useState<string | null>(null);
+export const dynamic = "force-dynamic";
 
-  useEffect(() => {
-    fetch("/api/csrf")
-      .then((r) => r.json())
-      .then((d) => setCsrf(d.token))
-      .catch(() => {});
-  }, []);
-
-  async function onSubmit(e: FormEvent) {
-    e.preventDefault();
-    setErr(null);
-    setMsg(null);
-    const res = await fetch("/api/contribute", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        gondi_pronunciation: gondi,
-        hindi,
-        english,
-        notes: `ERROR REPORT: ${problem}`,
-        contributor_name: name,
-        csrf,
-      }),
-    });
-    const data = await res.json();
-    if (!res.ok) setErr(data.error ?? "भेजा नहीं जा सका");
-    else {
-      setMsg("धन्यवाद! आपकी रिपोर्ट समीक्षा के लिए भेज दी गई है।");
-      setGondi("");
-      setHindi("");
-      setEnglish("");
-      setProblem("");
+export default async function ReportPage({
+  searchParams,
+}: {
+  searchParams: { word?: string };
+}) {
+  // Verify the reported word server-side — a client-supplied id is never
+  // trusted on its own; the entry must exist in the database.
+  let word: ReportedWord | null = null;
+  if (searchParams.word) {
+    const entry = await getEntry(searchParams.word);
+    if (entry) {
+      word = {
+        id: entry.id,
+        gondi_script: entry.gondi_script,
+        gondi_pronunciation: entry.gondi_pronunciation,
+        roman_gondi: entry.roman_gondi,
+        hindi: entry.hindi,
+        english: entry.english,
+      };
     }
   }
 
-  const input =
-    "mt-1 w-full rounded-xl border border-terracotta-500/30 bg-white px-3 py-2.5 text-ink-800 outline-none focus:ring-2 focus:ring-terracotta-500/40";
-
   return (
-    <div className="mx-auto max-w-xl px-4 py-10 md:py-14">
-      <header className="text-center">
-        <p className="inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.28em] text-terracotta-500">
-          <Flag size={13} aria-hidden /> Report an Error
-        </p>
-        <h1 className="mt-3 font-display text-3xl font-bold text-forest-600">
-          गलती बताएँ · सुधार में मदद करें
+    <div className="mx-auto max-w-6xl px-4 py-8 md:py-12">
+      <nav className="flex flex-wrap items-center gap-x-5 gap-y-2">
+        <Link
+          href="/browse"
+          className="inline-flex items-center gap-1.5 text-sm font-medium text-terracotta-500 underline-offset-2 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta-500"
+        >
+          <ArrowLeft size={15} aria-hidden /> Back to Dictionary · शब्दकोश
+        </Link>
+        {word && (
+          <Link
+            href={`/word/${word.id}`}
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-terracotta-500 underline-offset-2 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta-500"
+          >
+            <ArrowLeft size={15} aria-hidden /> Back to Word · शब्द पर वापस
+          </Link>
+        )}
+      </nav>
+
+      <header className="mt-5 max-w-3xl">
+        <h1 className="font-english text-3xl font-bold text-forest-600 md:text-4xl">
+          Report a Dictionary Error
         </h1>
-        <p className="mt-3 font-deva text-sm leading-relaxed text-ink-700">
-          यदि किसी शब्द की वर्तनी, अर्थ या लिपि में कोई गलती दिखे तो यहाँ बताएँ। रिपोर्ट
-          समीक्षा के बाद ही प्रकाशित होती है।
+        <p className="mt-1 font-deva text-xl text-terracotta-600">
+          शब्दकोश में गलती की रिपोर्ट करें
         </p>
+        <p className="mt-3 text-base leading-relaxed text-ink-700/90">
+          Found an incorrect word, meaning, spelling, pronunciation or other information? Help us
+          improve the dictionary.
+        </p>
+        <p className="mt-1 font-deva text-base leading-relaxed text-ink-700/80">
+          हर रिपोर्ट की समीक्षा होती है — कोई भी सुधार स्वतः लागू नहीं होता।
+        </p>
+        {!word && searchParams.word && (
+          <p className="mt-3 rounded-2xl bg-ochre-500/10 p-3.5 text-sm text-earth-500">
+            दिया गया शब्द Dictionary में नहीं मिला। आप फिर भी सामान्य रिपोर्ट भेज सकते हैं।
+          </p>
+        )}
       </header>
 
-      <form
-        onSubmit={onSubmit}
-        className="mt-8 space-y-4 rounded-3xl border border-earth-500/10 bg-white p-6 text-ink-800 shadow-card"
-      >
-        <label className="block text-sm font-medium">
-          शब्द (गोंडी उच्चारण) · Word
-          <input required value={gondi} onChange={(e) => setGondi(e.target.value)} className={`${input} font-deva`} placeholder="जैसे: तल्ला" />
-        </label>
-        <label className="block text-sm font-medium">
-          Hindi अर्थ
-          <input required value={hindi} onChange={(e) => setHindi(e.target.value)} className={`${input} font-deva`} placeholder="जैसे: सिर" />
-        </label>
-        <label className="block text-sm font-medium">
-          English meaning
-          <input required value={english} onChange={(e) => setEnglish(e.target.value)} className={input} placeholder="e.g. Head" />
-        </label>
-        <label className="block text-sm font-medium">
-          गलती का विवरण · What is wrong?
-          <textarea
-            required
-            value={problem}
-            onChange={(e) => setProblem(e.target.value)}
-            rows={4}
-            className={`${input} font-deva`}
-            placeholder="जैसे: मसराम लिपि में मात्रा गलत दिख रही है / अर्थ सही नहीं है…"
-          />
-        </label>
-        <label className="block text-sm font-medium">
-          आपका नाम (optional)
-          <input value={name} onChange={(e) => setName(e.target.value)} className={input} />
-        </label>
-
-        {err && <p className="text-sm text-terracotta-600">{err}</p>}
-        {msg && <p className="font-deva text-sm text-forest-600">{msg}</p>}
-
-        <button
-          type="submit"
-          className="min-h-[44px] w-full rounded-xl bg-terracotta-500 py-2.5 text-sm font-semibold text-cream-50 transition hover:bg-terracotta-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta-500"
-        >
-          रिपोर्ट भेजें · Submit report
-        </button>
-      </form>
+      <div className="mt-7 max-w-4xl">
+        <ReportForm word={word} />
+      </div>
     </div>
   );
 }

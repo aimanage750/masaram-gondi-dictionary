@@ -195,7 +195,7 @@ export function WordDetail({
               <Share2 size={15} aria-hidden /> Share
             </button>
             <Link
-              href="/report"
+              href={`/report?word=${entry.id}`}
               className={`${actionBtn} border border-ochre-500/50 text-earth-500 hover:bg-ochre-500/10`}
             >
               <Flag size={14} aria-hidden /> Report Error

@@ -1,11 +1,18 @@
 import { promises as fs } from "fs";
 import path from "path";
-import type { AuditEvent, Contribution, DictionaryEntry, GondiSentence } from "@/lib/types";
+import type {
+  AuditEvent,
+  Contribution,
+  DictionaryEntry,
+  DictionaryReport,
+  GondiSentence,
+} from "@/lib/types";
 
 export interface LocalDB {
   entries: DictionaryEntry[];
   sentences: GondiSentence[];
   contributions: Contribution[];
+  reports: DictionaryReport[];
   audit: AuditEvent[];
 }
 
@@ -44,6 +51,7 @@ async function readFileSafe(file: string): Promise<LocalDB | null> {
       entries: parsed.entries,
       sentences: parsed.sentences ?? [],
       contributions: parsed.contributions ?? [],
+      reports: parsed.reports ?? [],
       audit: parsed.audit ?? [],
     };
   } catch {
@@ -82,6 +90,7 @@ async function githubGet(): Promise<{ db: LocalDB; sha: string } | null> {
       entries: parsed.entries ?? [],
       sentences: parsed.sentences ?? [],
       contributions: parsed.contributions ?? [],
+      reports: parsed.reports ?? [],
       audit: parsed.audit ?? [],
     },
     sha: body.sha,

@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { ERROR_TYPES } from "@/lib/types";
 
 const SCRIPT_INJECTION = /<\s*script|javascript:|data:text\/html|onerror\s*=|onload\s*=/i;
 const PATH_TRAVERSAL = /(\.\.|[\\/]\.\.|%2e%2e)/i;
@@ -111,6 +112,49 @@ export const contributionSchema = z
   });
 
 export type ContributionPayload = z.infer<typeof contributionSchema>;
+
+/* ------------------- Phase 5: dictionary error reports ------------------- */
+
+/** Public dictionary-error report payload.
+ * Required: at least one error type + a description. Everything else is
+ * optional. Status fields are deliberately ABSENT — the server forces
+ * every report to "pending" and no report ever modifies the dictionary. */
+export const reportSchema = z.object({
+  dictionary_entry_id: z
+    .string()
+    .trim()
+    .regex(/^[a-z0-9]{2,24}$/i, "Invalid word id")
+    .optional()
+    .or(z.literal("")),
+  error_types: z.array(z.enum(ERROR_TYPES)).min(1).max(8),
+  description: z.string().trim().min(1, "विवरण आवश्यक है").max(1000),
+  suggested_correction: text(1000).optional(),
+  correct_gondi_devanagari: text(200).optional(),
+  correct_roman_gondi: text(200).optional(),
+  correct_masaram_gondi: text(200).optional(),
+  correct_hindi: text(200).optional(),
+  correct_english: text(200).optional(),
+  correct_pronunciation: text(200).optional(),
+  correct_hindi_definition: text(500).optional(),
+  correct_english_definition: text(500).optional(),
+  correct_hindi_example: text(400).optional(),
+  correct_english_example: text(400).optional(),
+  correct_gondi_example: text(400).optional(),
+  source_type: z
+    .enum(["", "book", "pdf", "website", "academic", "author", "community", "other"])
+    .optional(),
+  source_name: text(200).optional(),
+  source_author: text(120).optional(),
+  source_page: text(40).optional(),
+  source_url: safeUrl.optional(),
+  evidence: text(800).optional(),
+  reporter_name: text(80).optional(),
+  reporter_email: z.string().trim().email().max(120).optional().or(z.literal("")),
+  website: text(200).optional(), // honeypot
+  csrf: z.string().min(8).optional(),
+});
+
+export type ReportPayload = z.infer<typeof reportSchema>;
 
 export const searchQuerySchema = z.object({
   q: z.string().trim().min(1).max(120),

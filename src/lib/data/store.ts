@@ -1,4 +1,4 @@
-import type { DictionaryEntry, GondiSentence } from "@/lib/types";
+import type { DictionaryEntry, DictionaryReport, GondiSentence } from "@/lib/types";
 import { RAW_ENTRIES } from "@/data/raw-entries";
 import { enrichRaw } from "@/lib/mapping/enrich";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
@@ -14,7 +14,13 @@ function seedEntries(): DictionaryEntry[] {
 async function readLocal(): Promise<LocalDB> {
   const persisted = await readPersisted();
   if (persisted && persisted.entries.length > 0) return persisted;
-  return { entries: seedEntries(), sentences: persisted?.sentences ?? [], contributions: [], audit: [] };
+  return {
+    entries: seedEntries(),
+    sentences: persisted?.sentences ?? [],
+    contributions: [],
+    reports: [],
+    audit: [],
+  };
 }
 
 async function writeLocal(db: LocalDB) {
@@ -124,6 +130,81 @@ export async function addContribution(entry: LocalDB["contributions"][number]) {
   const db = await readLocal();
   db.contributions.unshift(entry);
   await writeLocal(db);
+}
+
+export async function addReport(report: DictionaryReport) {
+  if (isSupabaseConfigured()) {
+    const sb = createServiceClient();
+    const payloadBytes = JSON.stringify(report).length;
+    const core = {
+      dictionary_entry_id: report.dictionary_entry_id,
+      reported_gondi_devanagari: report.reported_gondi_devanagari,
+      reported_roman_gondi: report.reported_roman_gondi,
+      reported_masaram_gondi: report.reported_masaram_gondi,
+      reported_hindi: report.reported_hindi,
+      reported_english: report.reported_english,
+      error_types: report.error_types,
+      description: report.description,
+      suggested_correction: report.suggested_correction,
+      source_type: report.source_type,
+      source_name: report.source_name,
+      source_author: report.source_author,
+      source_page: report.source_page,
+      source_url: report.source_url,
+      evidence: report.evidence,
+      reporter_name: report.reporter_name,
+      reporter_email: report.reporter_email,
+      status: "pending",
+      payload_bytes: payloadBytes,
+    };
+    // Rich `corrections` column exists only after migration 0009; fall back
+    // to core columns so unmigrated databases keep accepting reports.
+    const rich = await sb.from("dictionary_reports").insert({
+      ...core,
+      corrections: {
+        correct_gondi_devanagari: report.correct_gondi_devanagari,
+        correct_roman_gondi: report.correct_roman_gondi,
+        correct_masaram_gondi: report.correct_masaram_gondi,
+        correct_hindi: report.correct_hindi,
+        correct_english: report.correct_english,
+        correct_pronunciation: report.correct_pronunciation,
+        correct_hindi_definition: report.correct_hindi_definition,
+        correct_english_definition: report.correct_english_definition,
+        correct_hindi_example: report.correct_hindi_example,
+        correct_english_example: report.correct_english_example,
+        correct_gondi_example: report.correct_gondi_example,
+      },
+    });
+    if (rich.error) {
+      const fallback = await sb.from("dictionary_reports").insert(core);
+      if (fallback.error) throw fallback.error;
+    }
+    return;
+  }
+  const db = await readLocal();
+  db.reports.unshift(report);
+  await writeLocal(db);
+}
+
+/** Number of not-yet-rejected reports for one entry — powers the
+ * "this may already have been reported" notice. Never exposes reporter data. */
+export async function countOpenReports(dictionaryEntryId: string): Promise<number> {
+  if (isSupabaseConfigured()) {
+    const sb = createServiceClient();
+    const { count, error } = await sb
+      .from("dictionary_reports")
+      .select("*", { count: "exact", head: true })
+      .eq("dictionary_entry_id", dictionaryEntryId)
+      .in("status", ["pending", "investigating"]);
+    if (error) throw error;
+    return count ?? 0;
+  }
+  const db = await readLocal();
+  return db.reports.filter(
+    (r) =>
+      r.dictionary_entry_id === dictionaryEntryId &&
+      (r.status === "pending" || r.status === "investigating")
+  ).length;
 }
 
 export async function listContributions() {
