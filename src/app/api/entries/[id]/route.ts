@@ -43,8 +43,13 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
       id: existing.id,
       status: parsed.data.status ?? existing.status,
       verified: parsed.data.verified ?? existing.verified,
+      source: parsed.data.source ?? existing.source,
+      gondi_script: parsed.data.gondi_script || existing.gondi_script,
+      roman_gondi: parsed.data.roman_gondi || existing.roman_gondi,
+      roman_hindi: parsed.data.roman_hindi || existing.roman_hindi,
     }
   );
+  if (parsed.data.source_page) entry.source_page = parsed.data.source_page;
   try {
     await upsertEntry(entry, user.email);
   } catch (e) {

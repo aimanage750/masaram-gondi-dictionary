@@ -6,6 +6,7 @@ import type {
   DictionaryEntry,
   DictionaryReport,
   GondiSentence,
+  SourceItem,
 } from "@/lib/types";
 
 export interface LocalDB {
@@ -13,6 +14,7 @@ export interface LocalDB {
   sentences: GondiSentence[];
   contributions: Contribution[];
   reports: DictionaryReport[];
+  sources: SourceItem[];
   audit: AuditEvent[];
 }
 
@@ -52,6 +54,7 @@ async function readFileSafe(file: string): Promise<LocalDB | null> {
       sentences: parsed.sentences ?? [],
       contributions: parsed.contributions ?? [],
       reports: parsed.reports ?? [],
+      sources: parsed.sources ?? [],
       audit: parsed.audit ?? [],
     };
   } catch {
@@ -91,6 +94,7 @@ async function githubGet(): Promise<{ db: LocalDB; sha: string } | null> {
       sentences: parsed.sentences ?? [],
       contributions: parsed.contributions ?? [],
       reports: parsed.reports ?? [],
+      sources: parsed.sources ?? [],
       audit: parsed.audit ?? [],
     },
     sha: body.sha,

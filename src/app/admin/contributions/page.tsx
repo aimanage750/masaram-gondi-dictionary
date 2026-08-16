@@ -1,36 +1,35 @@
-import { listContributions } from "@/lib/data/store";
-import { ReviewButtons } from "@/components/admin/ReviewButtons";
+import { listContributions, listEntries } from "@/lib/data/store";
+import { ContributionsAdmin } from "@/components/admin/ContributionsAdmin";
 
 export const dynamic = "force-dynamic";
+export const metadata = { title: "Admin · Contributions" };
 
-export default async function ContributionsPage() {
-  const rows = (await listContributions()) as Array<{
-    id: string;
-    gondi_pronunciation: string;
-    hindi: string;
-    english: string;
-    status?: string;
-    review_status?: string;
-    contributor_name?: string;
-  }>;
-
+export default async function AdminContributionsPage() {
+  const [contributions, entries] = await Promise.all([listContributions(), listEntries()]);
   return (
-    <div>
-      <h1 className="font-display text-3xl">Contributions</h1>
-      <div className="mt-4 space-y-3">
-        {rows.length === 0 && <p>No contributions yet.</p>}
-        {rows.map((r) => (
-          <div key={r.id} className="gond-frame rounded-2xl bg-white p-4">
-            <p className="font-deva text-lg">
-              {r.gondi_pronunciation} · {r.hindi} · {r.english}
-            </p>
-            <p className="text-xs text-ink-700/60">
-              {r.contributor_name || "anonymous"} · {r.review_status ?? r.status}
-            </p>
-            {(r.review_status ?? r.status) === "pending" && <ReviewButtons id={r.id} />}
-          </div>
-        ))}
-      </div>
-    </div>
+    <ContributionsAdmin
+      contributions={contributions.map((c) => ({
+        id: c.id,
+        gondi_script: c.gondi_script,
+        gondi_pronunciation: c.gondi_pronunciation,
+        roman_gondi: c.roman_gondi,
+        roman_hindi: c.roman_hindi,
+        hindi: c.hindi,
+        english: c.english,
+        category: c.category,
+        notes: c.notes,
+        contributor_name: c.contributor_name,
+        review_status: c.review_status,
+        status: c.status,
+        created_at: c.created_at,
+        details: c.details,
+      }))}
+      entries={entries.map((e) => ({
+        id: e.id,
+        gondi_pronunciation: e.gondi_pronunciation,
+        hindi: e.hindi,
+        english: e.english,
+      }))}
+    />
   );
 }

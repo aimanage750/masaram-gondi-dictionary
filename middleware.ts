@@ -12,6 +12,16 @@ export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
   if (!pathname.startsWith(ADMIN_PREFIX)) return res;
 
+  // Public admin-auth surfaces: the login page, the access-denied page and
+  // the OAuth endpoints themselves must stay reachable while logged out.
+  if (
+    pathname.startsWith("/admin/login") ||
+    pathname.startsWith("/admin/access-denied") ||
+    pathname.startsWith("/api/admin-auth")
+  ) {
+    return res;
+  }
+
   // Server-side session check — never rely on client redirects alone.
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const anon = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -22,7 +32,7 @@ export async function middleware(req: NextRequest) {
       req.cookies.getAll().find((c) => c.name.endsWith("-auth-token"))?.value;
     if (!access) {
       const url = req.nextUrl.clone();
-      url.pathname = "/login";
+      url.pathname = "/admin/login";
       url.searchParams.set("next", pathname);
       return NextResponse.redirect(url);
     }
@@ -30,9 +40,10 @@ export async function middleware(req: NextRequest) {
   }
 
   const local = req.cookies.get("mgd_session")?.value;
-  if (!local) {
+  const admin = req.cookies.get("mgd_admin")?.value;
+  if (!local && !admin) {
     const url = req.nextUrl.clone();
-    url.pathname = "/login";
+    url.pathname = "/admin/login";
     url.searchParams.set("next", pathname);
     return NextResponse.redirect(url);
   }

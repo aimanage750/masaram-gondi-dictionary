@@ -1,4 +1,10 @@
-import type { DictionaryEntry, DictionaryReport, GondiSentence } from "@/lib/types";
+import type {
+  DictionaryEntry,
+  DictionaryReport,
+  GondiSentence,
+  ReportStatus,
+  SourceItem,
+} from "@/lib/types";
 import { RAW_ENTRIES } from "@/data/raw-entries";
 import { enrichRaw } from "@/lib/mapping/enrich";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
@@ -19,6 +25,7 @@ async function readLocal(): Promise<LocalDB> {
     sentences: persisted?.sentences ?? [],
     contributions: [],
     reports: [],
+    sources: [],
     audit: [],
   };
 }
@@ -335,6 +342,255 @@ export async function deleteSentence(id: string, actor: string) {
     entity_id: id,
     detail: "",
     created_at: new Date().toISOString(),
+  });
+  await writeLocal(db);
+}
+
+/* ===================== Phase 9: admin management ===================== */
+
+async function auditLocal(
+  actor: string,
+  action: string,
+  entity_type: string,
+  entity_id: string | null,
+  detail: string
+) {
+  const db = await readLocal();
+  db.audit.unshift({
+    id: `aud_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`,
+    actor,
+    action,
+    entity_type,
+    entity_id,
+    detail,
+    created_at: new Date().toISOString(),
+  });
+  await writeLocal(db);
+}
+
+/** Record an admin action on every configured backend. */
+export async function auditEvent(
+  actor: string,
+  action: string,
+  entity_type: string,
+  entity_id: string | null,
+  detail: string
+) {
+  if (isSupabaseConfigured()) {
+    await writeAudit(actor, action, entity_type, entity_id ?? "", detail);
+    return;
+  }
+  await auditLocal(actor, action, entity_type, entity_id, detail);
+}
+
+export async function listReports(): Promise<DictionaryReport[]> {
+  if (isSupabaseConfigured()) {
+    const sb = createServiceClient();
+    const { data, error } = await sb
+      .from("dictionary_reports")
+      .select("*")
+      .order("created_at", { ascending: false });
+    if (error) throw error;
+    return ((data ?? []) as unknown as DictionaryReport[]).map((r) => ({
+      ...r,
+      id: String(r.id),
+      error_types: r.error_types ?? [],
+    }));
+  }
+  const db = await readLocal();
+  return db.reports;
+}
+
+export async function updateReportStatus(
+  id: string,
+  status: ReportStatus,
+  actor: string
+) {
+  if (isSupabaseConfigured()) {
+    const sb = createServiceClient();
+    const { error } = await sb
+      .from("dictionary_reports")
+      .update({ status, updated_at: new Date().toISOString() })
+      .eq("id", id);
+    if (error) throw error;
+  } else {
+    const db = await readLocal();
+    const r = db.reports.find((x) => x.id === id);
+    if (!r) throw new Error("Report not found");
+    r.status = status;
+    r.updated_at = new Date().toISOString();
+    await writeLocal(db);
+  }
+  await auditEvent(actor, `REPORT_${status.toUpperCase()}`, "report", id, "");
+}
+
+/* ------------------------------ sources ------------------------------ */
+
+export async function listSources(): Promise<SourceItem[]> {
+  if (isSupabaseConfigured()) {
+    const sb = createServiceClient();
+    const { data, error } = await sb
+      .from("sources")
+      .select("*")
+      .order("created_at", { ascending: false });
+    if (error) throw error;
+    return ((data ?? []) as unknown as SourceItem[]).map((s) => ({ ...s, id: String(s.id) }));
+  }
+  const db = await readLocal();
+  return db.sources;
+}
+
+export async function addSource(item: SourceItem, actor: string) {
+  if (isSupabaseConfigured()) {
+    const sb = createServiceClient();
+    const { error } = await sb.from("sources").insert({
+      type: item.type,
+      name: item.name,
+      author: item.author,
+      page: item.page,
+      url: item.url,
+      notes: item.notes,
+      verified: item.verified,
+    });
+    if (error) throw error;
+  } else {
+    const db = await readLocal();
+    db.sources.unshift(item);
+    await writeLocal(db);
+  }
+  await auditEvent(actor, "SOURCE_CREATED", "source", item.id, item.name);
+}
+
+export async function updateSource(
+  id: string,
+  patch: Partial<Omit<SourceItem, "id" | "created_at">>,
+  actor: string
+) {
+  if (isSupabaseConfigured()) {
+    const sb = createServiceClient();
+    const { error } = await sb
+      .from("sources")
+      .update({ ...patch, updated_at: new Date().toISOString() })
+      .eq("id", id);
+    if (error) throw error;
+  } else {
+    const db = await readLocal();
+    const s = db.sources.find((x) => x.id === id);
+    if (!s) throw new Error("Source not found");
+    Object.assign(s, patch, { updated_at: new Date().toISOString() });
+    await writeLocal(db);
+  }
+  await auditEvent(actor, patch.verified === true ? "SOURCE_VERIFIED" : "SOURCE_UPDATED", "source", id, "");
+}
+
+/* ---------------- contribution publish / merge ----------------------- */
+
+/** Approve + publish a contribution as a public dictionary entry.
+ * Returns the created/updated entry id. Never automatic — admin-confirmed. */
+export async function publishContribution(
+  contributionId: string,
+  actor: string,
+  opts?: { verified?: boolean }
+): Promise<string> {
+  if (isSupabaseConfigured()) {
+    throw new Error("Publish workflow requires the local/GitHub data store");
+  }
+  const db = await readLocal();
+  const c = db.contributions.find((x) => x.id === contributionId);
+  if (!c) throw new Error("Contribution not found");
+  if (!c.gondi_pronunciation || !c.hindi || !c.english) {
+    throw new Error("Contribution is missing the core Gondi/Hindi/English fields");
+  }
+  const existing = db.entries.find(
+    (e) => e.gondi_pronunciation === c.gondi_pronunciation && e.hindi === c.hindi
+  );
+  const now = new Date().toISOString();
+  if (existing) {
+    // Same word already published — do not create a duplicate.
+    existing.updated_at = now;
+    c.review_status = "approved";
+    c.status = "published";
+    c.updated_at = now;
+  } else {
+    // Explicit field list — contribution-only data (contributor identity,
+    // review status, details) never leaks into the public dictionary entry.
+    const entry: DictionaryEntry = {
+      id: c.id,
+      gondi_script: c.gondi_script,
+      gondi_pronunciation: c.gondi_pronunciation,
+      roman_gondi: c.roman_gondi,
+      roman_hindi: c.roman_hindi,
+      hindi: c.hindi,
+      english: c.english,
+      gondi_normalized: c.gondi_normalized,
+      category: c.category,
+      category_hi: c.category_hi,
+      notes: c.notes,
+      source: c.source,
+      source_page: c.source_page,
+      verified: opts?.verified ?? false,
+      status: "published",
+      audio_path: c.audio_path,
+      created_at: c.created_at ?? now,
+      updated_at: now,
+      created_by: actor,
+    };
+    db.entries.push(entry);
+    c.review_status = "approved";
+    c.status = "published";
+    c.updated_at = now;
+  }
+  db.audit.unshift({
+    id: `aud_${Date.now()}`,
+    actor,
+    action: "CONTRIBUTION_PUBLISHED",
+    entity_type: "contribution",
+    entity_id: contributionId,
+    detail: c.gondi_pronunciation,
+    created_at: now,
+  });
+  await writeLocal(db);
+  return existing?.id ?? c.id;
+}
+
+/** Merge selected contribution fields into an existing entry (no duplicate
+ * created). `fields` lists which contribution values overwrite the entry. */
+export async function mergeContribution(
+  contributionId: string,
+  targetEntryId: string,
+  fields: string[],
+  actor: string
+): Promise<void> {
+  if (isSupabaseConfigured()) {
+    throw new Error("Merge workflow requires the local/GitHub data store");
+  }
+  const db = await readLocal();
+  const c = db.contributions.find((x) => x.id === contributionId);
+  const e = db.entries.find((x) => x.id === targetEntryId);
+  if (!c || !e) throw new Error("Contribution or entry not found");
+  const d = c.details ?? {};
+  const map: Record<string, () => void> = {
+    hindi: () => (e.hindi = d.hindi ?? c.hindi),
+    english: () => (e.english = d.english ?? c.english),
+    roman_gondi: () => (e.roman_gondi = d.roman_gondi ?? e.roman_gondi),
+    roman_hindi: () => (e.roman_hindi = d.roman_hindi ?? e.roman_hindi),
+    masaram_gondi: () => (e.gondi_script = d.masaram_gondi ?? e.gondi_script),
+    source: () => (e.source = d.source_name ? `${d.source_name}` : e.source),
+    notes: () => (e.notes = d.additional_notes ?? e.notes),
+  };
+  for (const f of fields) map[f]?.();
+  e.updated_at = new Date().toISOString();
+  c.review_status = "approved";
+  c.status = "rejected"; // consumed by merge, not published separately
+  c.updated_at = e.updated_at;
+  db.audit.unshift({
+    id: `aud_${Date.now()}`,
+    actor,
+    action: "CONTRIBUTION_MERGED",
+    entity_type: "entry",
+    entity_id: targetEntryId,
+    detail: `${c.gondi_pronunciation} ← ${fields.join(",")}`,
+    created_at: e.updated_at,
   });
   await writeLocal(db);
 }

@@ -42,8 +42,13 @@ export async function POST(req: NextRequest) {
       status: parsed.data.status ?? "published",
       verified: parsed.data.verified ?? true,
       created_by: user.id,
+      source: parsed.data.source,
+      gondi_script: parsed.data.gondi_script || undefined,
+      roman_gondi: parsed.data.roman_gondi || undefined,
+      roman_hindi: parsed.data.roman_hindi || undefined,
     }
   );
+  if (parsed.data.source_page) entry.source_page = parsed.data.source_page;
   try {
     await upsertEntry(entry, user.email);
   } catch (e) {

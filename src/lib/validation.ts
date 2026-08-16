@@ -31,8 +31,12 @@ export const entrySchema = z.object({
   category_hi: z.string().trim().max(80).optional(),
   notes: z.string().trim().max(500).optional(),
   gondi_script: z.string().trim().max(400).optional(),
-  status: z.enum(["published", "pending", "rejected", "draft"]).optional(),
+  roman_gondi: z.string().trim().max(200).optional(),
+  roman_hindi: z.string().trim().max(200).optional(),
+  status: z.enum(["published", "pending", "rejected", "draft", "archived"]).optional(),
   verified: z.boolean().optional(),
+  source: z.string().trim().max(200).optional(),
+  source_page: z.string().trim().max(40).optional(),
 });
 
 export const sentenceSchema = z.object({

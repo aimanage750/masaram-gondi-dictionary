@@ -1,4 +1,4 @@
-export type EntryStatus = "published" | "pending" | "rejected" | "draft";
+export type EntryStatus = "published" | "pending" | "rejected" | "draft" | "archived";
 
 export type UserRole = "public" | "contributor" | "admin";
 
@@ -201,6 +201,35 @@ export interface SessionUser {
   email: string;
   role: UserRole;
   name?: string;
+}
+
+/* --------------------- Phase 9: secure admin panel --------------------- */
+
+export type AdminRole = "super_admin" | "editor" | "reviewer";
+
+/** Authenticated + authorized admin (Google OAuth allowlist). Legacy local
+ * sessions map to super_admin for backwards compatibility. */
+export interface AdminUser {
+  email: string;
+  name?: string;
+  picture?: string;
+  role: AdminRole;
+  /** true when authenticated via the legacy local password session */
+  legacy?: boolean;
+}
+
+/** A managed source/reference record (books, PDFs, websites, authors). */
+export interface SourceItem {
+  id: string;
+  type: "book" | "pdf" | "author" | "website" | "academic" | "community" | "other";
+  name: string;
+  author?: string | null;
+  page?: string | null;
+  url?: string | null;
+  notes?: string | null;
+  verified: boolean;
+  created_at: string;
+  updated_at: string;
 }
 
 /** A full Gondi sentence. Public UI shows only the 4 standard fields. */
