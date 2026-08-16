@@ -75,7 +75,7 @@ function Section({ section }: { section: GrammarSection }) {
       )}
 
       {section.note && (
-        <p className="mt-3 rounded-r-xl border-l-4 border-ochre-500 bg-[#fff1cc] px-3 py-2 text-sm leading-relaxed text-ink-700">
+        <p className="mt-3 rounded-r-xl border-l-4 border-ochre-500 note-paper px-3 py-2 text-sm leading-relaxed text-ink-700">
           {section.note}
         </p>
       )}

@@ -64,7 +64,21 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="hi" className={`${inter.variable} ${gondi.variable} ${deva.variable}`}>
+    <html
+      lang="hi"
+      suppressHydrationWarning
+      className={`${inter.variable} ${gondi.variable} ${deva.variable}`}
+    >
+      <head>
+        {/* Pre-paint theme init — runs before first render, prevents flash.
+            Reads localStorage "theme" (light | dark | system, default system)
+            and applies the resolved `dark` class + color-scheme immediately. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem('theme')||'system';var d=t==='dark'||(t==='system'&&window.matchMedia('(prefers-color-scheme: dark)').matches);var h=document.documentElement;h.classList.toggle('dark',d);h.style.colorScheme=d?'dark':'light';}catch(e){}})();`,
+          }}
+        />
+      </head>
       <body className="font-sans antialiased min-h-screen flex flex-col">
         <SiteHeader />
         <main className="flex-1">{children}</main>

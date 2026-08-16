@@ -2,7 +2,62 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ======================================================================
+ * PHASE 7 — CENTRAL THEME TOKENS (Light / Dark / System)
+ * One source of truth. Tailwind color tokens resolve to these variables
+ * (see tailwind.config.ts), including every opacity modifier.
+ * LIGHT = warm cream paper · DARK = layered warm charcoal (never #000).
+ * ====================================================================== */
 :root {
+  color-scheme: light;
+
+  /* ---- semantic tokens ------------------------------------------------ */
+  --background: #f5ebdd;          /* page */
+  --surface: #f5ebdd;             /* header / subtle surface */
+  --surface-card: 255 255 255;    /* cards & inputs (Tailwind `white`) */
+  --surface-elevated: #fffdf6;
+  --foreground: 23 34 28;         /* primary text */
+  --muted-foreground: 58 74 64;   /* secondary text */
+  --border: 107 53 24;            /* borders (earth) */
+  --border-subtle: 107 53 24;
+  --primary: 169 79 36;           /* terracotta */
+  --primary-foreground: 251 246 236;
+  --secondary: 18 60 42;          /* forest */
+  --secondary-foreground: 251 246 236;
+  --accent: 197 138 58;           /* ochre / gold */
+  --accent-foreground: 14 23 18;
+  --success: 30 81 56;
+  --warning: 168 114 38;
+  --error: 169 79 36;
+  --input: 255 255 255;
+  --input-foreground: 23 34 28;
+  --focus-ring: 169 79 36;
+
+  /* ---- Tailwind token channels (rgb triplets) ------------------------- */
+  --ink-700: 58 74 64;
+  --ink-800: 23 34 28;
+  --ink-900: 14 23 18;
+  --earth-500: 107 53 24;
+  --terracotta-400: 192 106 56;
+  --terracotta-500: 169 79 36;
+  --terracotta-600: 140 63 27;
+  --terracotta-700: 107 53 24;
+  --forest-400: 46 107 76;
+  --forest-500: 30 81 56;
+  --forest-600: 18 60 42;
+  --forest-700: 13 49 33;
+  --forest-800: 10 42 28;
+  --forest-900: 8 37 26;
+  --ochre-400: 217 168 92;
+  --ochre-500: 197 138 58;
+  --ochre-600: 168 114 38;
+
+  /* ---- shadows --------------------------------------------------------- */
+  --shadow-card: rgba(23, 34, 28, 0.18);
+  --shadow-lift: rgba(23, 34, 28, 0.28);
+  --shadow-inset: rgba(255, 255, 255, 0.4);
+
+  /* ---- legacy shortcuts (kept for older rules below) -------------------- */
   --cream: #f5ebdd;
   --beige: #ede0cc;
   --ink: #17221c;
@@ -13,16 +68,73 @@
   --gold: #c58a3a;
 }
 
+/* ------------------------------ DARK THEME ----------------------------- */
+.dark {
+  color-scheme: dark;
+
+  --background: #171310;          /* page — warm charcoal, never pure black */
+  --surface: #1e1915;             /* header / subtle surface */
+  --surface-card: 37 31 25;       /* cards & inputs */
+  --surface-elevated: #2e261e;
+  --foreground: 234 227 215;
+  --muted-foreground: 181 171 156;
+  --border: 197 149 105;
+  --border-subtle: 122 106 88;
+  --primary: 199 109 61;
+  --primary-foreground: 251 246 236;
+  --secondary: 46 130 89;
+  --secondary-foreground: 251 246 236;
+  --accent: 217 168 92;
+  --accent-foreground: 20 16 12;
+  --success: 87 178 132;
+  --warning: 217 168 92;
+  --error: 226 138 90;
+  --input: 37 31 25;
+  --input-foreground: 234 227 215;
+  --focus-ring: 226 138 90;
+
+  --ink-700: 181 171 156;
+  --ink-800: 234 227 215;
+  --ink-900: 12 17 13;
+  --earth-500: 197 149 105;
+  --terracotta-400: 231 154 106;
+  --terracotta-500: 199 109 61;
+  --terracotta-600: 214 126 79;
+  --terracotta-700: 228 146 99;
+  --forest-400: 138 206 170;
+  --forest-500: 55 148 101;
+  --forest-600: 46 130 89;
+  --forest-700: 160 219 188;
+  /* Footer/panel backgrounds stay deep in dark mode (cream text on top). */
+  --forest-800: 13 45 32;
+  --forest-900: 10 38 27;
+  --ochre-400: 228 184 116;
+  --ochre-500: 217 168 92;
+  --ochre-600: 197 138 58;
+
+  --shadow-card: rgba(0, 0, 0, 0.5);
+  --shadow-lift: rgba(0, 0, 0, 0.6);
+  --shadow-inset: rgba(255, 255, 255, 0.05);
+
+  --cream: #171310;
+  --beige: #1e1915;
+  --ink: #eae3d7;
+  --forest: #4caf7d;
+  --deep: #0a261b;
+  --earth: #c59569;
+  --terracotta: #c76d3d;
+  --gold: #d9a85c;
+}
+
 html,
 body {
-  background: var(--cream);
-  color: var(--ink);
+  background: var(--background);
+  color: rgb(var(--foreground));
 }
 
 /*
- * Light earthy base: soft cream with a whisper of tribal dot/line pattern
- * (forest green + terracotta + gold at very low opacity) and gentle radial
- * tints — inspired by the reference design's paper texture.
+ * Light: soft cream with a whisper of tribal dot/line pattern.
+ * Dark: same texture at lower contrast over warm charcoal.
  */
 body {
   min-height: 100vh;
@@ -32,10 +144,20 @@ body {
     radial-gradient(circle at 50% 96%, rgba(197, 138, 58, 0.06), transparent 32%),
     url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140' viewBox='0 0 140 140'><g fill='none' stroke='%23123c2a' stroke-opacity='0.055' stroke-width='1'><circle cx='16' cy='22' r='1.3'/><circle cx='52' cy='10' r='1.1'/><circle cx='96' cy='26' r='1.4'/><circle cx='126' cy='70' r='1.2'/><circle cx='30' cy='96' r='1.3'/><circle cx='78' cy='118' r='1.2'/><path d='M10 64c20-12 32 10 52 0M74 44c16 10 26-8 46 4M18 128c18-10 30 8 48 0'/></g><g fill='none' stroke='%23a94f24' stroke-opacity='0.05' stroke-width='1'><circle cx='70' cy='70' r='1.1'/><circle cx='112' cy='108' r='1.2'/><path d='M96 88c14 8 22-6 36 4'/></g></svg>");
 }
+.dark body {
+  background-image:
+    radial-gradient(circle at 10% 6%, rgba(87, 178, 132, 0.05), transparent 30%),
+    radial-gradient(circle at 92% 12%, rgba(199, 109, 61, 0.05), transparent 28%),
+    radial-gradient(circle at 50% 96%, rgba(217, 168, 92, 0.05), transparent 32%);
+}
 
 ::selection {
   background: rgba(197, 138, 58, 0.35);
   color: #08251a;
+}
+.dark ::selection {
+  background: rgba(217, 168, 92, 0.4);
+  color: #171310;
 }
 
 /* ---- Multi-script typography system -------------------------------
@@ -74,19 +196,19 @@ body {
 
 /* Soft framed card used across dictionary results and detail pages. */
 .gond-frame {
-  border: 1px solid rgba(107, 53, 24, 0.18);
+  border: 1px solid rgb(var(--earth-500) / 0.18);
   box-shadow:
-    inset 0 0 0 4px rgba(197, 138, 58, 0.08),
-    0 14px 34px -18px rgba(23, 34, 28, 0.25);
+    inset 0 0 0 4px rgb(var(--ochre-500) / 0.08),
+    0 14px 34px -18px var(--shadow-lift);
 }
 
 .tofu-flag {
-  outline: 2px dashed #a94f24;
+  outline: 2px dashed rgb(var(--terracotta-500));
   outline-offset: 2px;
 }
 
 :focus-visible {
-  outline: 2px solid #a94f24;
+  outline: 2px solid rgb(var(--focus-ring));
   outline-offset: 2px;
 }
 
@@ -129,3 +251,27 @@ body {
     text-wrap: balance;
   }
 }
+
+/* ======================================================================
+ * DARK SURFACE OVERRIDES for the static `cream` scale.
+ * cream-* stays bright as TEXT (buttons on colored backgrounds), so only
+ * background/border roles flip. One entry per variant used in the codebase.
+ * ====================================================================== */
+.dark .bg-cream-50 { background-color: #171310; }
+.dark .bg-cream-50\/90 { background-color: rgb(23 19 16 / 0.9); }
+.dark .bg-cream-100 { background-color: #1e1915; }
+.dark .bg-cream-100\/60 { background-color: rgb(30 25 21 / 0.6); }
+.dark .bg-cream-100\/70 { background-color: rgb(30 25 21 / 0.7); }
+.dark .bg-cream-100\/95 { background-color: rgb(30 25 21 / 0.95); }
+.dark .bg-cream-200 { background-color: #282119; }
+.dark .bg-cream-200\/60 { background-color: rgb(40 33 25 / 0.6); }
+.dark .bg-cream-200\/70 { background-color: rgb(40 33 25 / 0.7); }
+.dark .bg-cream-300\/60 { background-color: rgb(52 43 33 / 0.6); }
+.dark .hover\:bg-cream-100:hover { background-color: #241e18; }
+.dark .hover\:bg-cream-200:hover { background-color: #2f271e; }
+.dark .hover\:bg-cream-300:hover { background-color: #3a3024; }
+.dark .border-cream-200 { border-color: #3b3227; }
+
+/* Warm paper note boxes → warm dark tint (kept in sync with ochre accent). */
+.note-paper { background-color: #fff1cc; }
+.dark .note-paper { background-color: rgb(217 168 92 / 0.12); }

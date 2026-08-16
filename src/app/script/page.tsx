@@ -102,7 +102,7 @@ export default function ScriptPage() {
           Devanagari, मसराम गोंडी अक्षर या Unicode code point से; category filter के साथ। हर अक्षर
           असली Unicode है — कॉपी करें और कहीं भी paste करें।
         </p>
-        <div className="mt-4 rounded-2xl border-l-4 border-ochre-500 bg-[#fff1cc] p-4 text-sm leading-relaxed text-ink-700">
+        <div className="mt-4 rounded-2xl border-l-4 border-ochre-500 note-paper p-4 text-sm leading-relaxed text-ink-700">
           दोनों लिपियाँ ब्राह्मी-शैली की अबुगिदा हैं, इसलिए १:१ ध्वनि-मानचित्र बनता है। मसराम में
           विराम (<span className="font-gondi text-base">𑵅</span>) युक्ताक्षर बनाता है, हलंता (
           <span className="font-gondi text-base">𑵄</span>) सिर्फ़ स्वर मारता है। र् → रेफ़{" "}

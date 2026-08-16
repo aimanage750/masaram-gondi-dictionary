@@ -41,7 +41,7 @@ export function ConverterOutput({
           toGondi
             ? "font-gondi [background-image:radial-gradient(circle_at_8px_8px,rgba(169,79,36,0.08)_1.1px,transparent_1.4px)] [background-size:16px_16px]"
             : "font-deva"
-        } bg-[#fffdf6]`}
+        } note-paper`}
       >
         {value}
       </div>

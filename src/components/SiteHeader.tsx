@@ -15,6 +15,7 @@ import {
   X,
 } from "lucide-react";
 import { TreeLogo } from "@/components/brand/TreeLogo";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 const NAV: { href: string; label: string; short?: string; icon: typeof Home }[] = [
   { href: "/", label: "Home", icon: Home },
@@ -85,6 +86,7 @@ export function SiteHeader() {
               </Link>
             );
           })}
+          <ThemeToggle className="ml-2" />
           <Link
             href="/login"
             className="ml-2 rounded-full border border-forest-600/25 px-3.5 py-1.5 text-sm font-medium text-forest-600 transition hover:bg-forest-600 hover:text-cream-50"
@@ -93,16 +95,19 @@ export function SiteHeader() {
           </Link>
         </nav>
 
-        <button
-          type="button"
-          className="rounded-xl p-2 text-forest-600 hover:bg-cream-200 lg:hidden"
-          onClick={() => setOpen((v) => !v)}
-          aria-label={open ? "मेनू बंद करें" : "मेनू खोलें"}
-          aria-expanded={open}
-          aria-controls="mobile-menu"
-        >
-          {open ? <X /> : <Menu />}
-        </button>
+        <div className="flex items-center gap-1.5 lg:hidden">
+          <ThemeToggle />
+          <button
+            type="button"
+            className="rounded-xl p-2 text-forest-600 hover:bg-cream-200"
+            onClick={() => setOpen((v) => !v)}
+            aria-label={open ? "मेनू बंद करें" : "मेनू खोलें"}
+            aria-expanded={open}
+            aria-controls="mobile-menu"
+          >
+            {open ? <X /> : <Menu />}
+          </button>
+        </div>
       </div>
 
       {open && (
