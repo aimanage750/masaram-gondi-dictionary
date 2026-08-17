@@ -22,8 +22,6 @@ Roman Gondi and Roman Hindi are used only to make search more flexible; they are
 
 | Masaram Gondi | Gondi Pronunciation | Hindi | English |
 |---|---|---|---|
-| 𑴛𑴧𑵅𑴧𑴱 | तल्ला | सिर | Head |
-
 Examples of supported search: `तल्ला`, `Talla`, `talla`, `TALLA`, `sir`, `सिर`, `Head`, `𑴛𑴧𑵅𑴧𑴱`.
 
 ## Features
