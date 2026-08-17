@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { ShieldX } from "lucide-react";
 
 export const metadata = {
@@ -25,12 +26,12 @@ export default function AccessDeniedPage() {
           >
             Try another account
           </a>
-          <a
+          <Link
             href="/"
             className="inline-flex min-h-[42px] items-center rounded-full bg-terracotta-500 px-5 py-2 text-sm font-semibold text-cream-50 hover:bg-terracotta-600"
           >
             Public site
-          </a>
+          </Link>
         </div>
       </div>
     </div>

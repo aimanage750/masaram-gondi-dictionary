@@ -16,13 +16,13 @@ export async function POST(req: NextRequest) {
   if (!parsed.success) return NextResponse.json({ error: "Invalid credentials" }, { status: 400 });
 
   try {
-    assertCsrf(parsed.data.csrf);
+    await assertCsrf(parsed.data.csrf);
   } catch {
     return NextResponse.json({ error: "Invalid CSRF token" }, { status: 403 });
   }
 
   if (isSupabaseConfigured()) {
-    const sb = createServerSupabase();
+    const sb = await createServerSupabase();
     if (!sb) return NextResponse.json({ error: "Auth unavailable" }, { status: 500 });
     const { error } = await sb.auth.signInWithPassword({
       email: parsed.data.email,

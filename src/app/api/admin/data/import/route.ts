@@ -37,7 +37,7 @@ interface Issue {
 }
 
 export async function POST(req: NextRequest) {
-  const user = getAdminUser();
+  const user = await getAdminUser();
   if (!user || !can(user.role, "publish")) {
     return NextResponse.json({ error: "CSV import requires super admin" }, { status: 403 });
   }
@@ -47,7 +47,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid payload" }, { status: 400 });
   }
   try {
-    assertCsrf(parsed.data.csrf);
+    await assertCsrf(parsed.data.csrf);
   } catch {
     return NextResponse.json({ error: "Invalid CSRF token" }, { status: 403 });
   }

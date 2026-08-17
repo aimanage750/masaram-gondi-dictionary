@@ -32,6 +32,8 @@ export function ThemeToggle({ className = "" }: { className?: string }) {
     const stored = localStorage.getItem(STORAGE_KEY);
     const initial: ThemeChoice =
       stored === "light" || stored === "dark" || stored === "system" ? stored : "system";
+    // The preference is intentionally read after hydration because localStorage is browser-only.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setChoice(initial);
     applyTheme(initial);
     setMounted(true);

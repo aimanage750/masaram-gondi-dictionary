@@ -35,6 +35,8 @@ export function Converter() {
 
   // History lives only in the browser; load once on mount (no SSR markup).
   useEffect(() => {
+    // Browser-only localStorage hydration; history is not part of server markup.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setHistory(loadHistory());
   }, []);
 

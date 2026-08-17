@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: msg }, { status: 400 });
   }
   try {
-    assertCsrf(body.csrf);
+    await assertCsrf(body.csrf);
     rejectDangerous(parsed.data.gondi_pronunciation, "Gondi");
   } catch (e) {
     return NextResponse.json({ error: (e as Error).message }, { status: 403 });

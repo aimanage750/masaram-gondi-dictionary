@@ -18,8 +18,9 @@ const bodySchema = z.object({
   csrf: z.string().min(8),
 });
 
-export async function POST(req: NextRequest, { params }: { params: { id: string } }) {
-  const user = getAdminUser();
+export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const user = await getAdminUser();
   if (!user || !can(user.role, "review")) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
@@ -27,7 +28,7 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
   const parsed = bodySchema.safeParse(body);
   if (!parsed.success) return NextResponse.json({ error: "Invalid action" }, { status: 400 });
   try {
-    assertCsrf(parsed.data.csrf);
+    await assertCsrf(parsed.data.csrf);
   } catch {
     return NextResponse.json({ error: "Invalid CSRF token" }, { status: 403 });
   }
@@ -41,11 +42,11 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
 
   try {
     if (action === "reject") {
-      await reviewContribution(params.id, "rejected", user.email);
+      await reviewContribution(id, "rejected", user.email);
       return NextResponse.json({ ok: true });
     }
     if (action === "publish") {
-      const entryId = await publishContribution(params.id, user.email, {
+      const entryId = await publishContribution(id, user.email, {
         verified: parsed.data.verified ?? false,
       });
       return NextResponse.json({ ok: true, entry_id: entryId });
@@ -54,8 +55,8 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
     if (!parsed.data.target_entry_id || !parsed.data.fields?.length) {
       return NextResponse.json({ error: "Merge needs target entry and fields" }, { status: 400 });
     }
-    await mergeContribution(params.id, parsed.data.target_entry_id, parsed.data.fields, user.email);
-    await auditEvent(user.email, "CONTRIBUTION_MERGED", "contribution", params.id, parsed.data.fields.join(","));
+    await mergeContribution(id, parsed.data.target_entry_id, parsed.data.fields, user.email);
+    await auditEvent(user.email, "CONTRIBUTION_MERGED", "contribution", id, parsed.data.fields.join(","));
     return NextResponse.json({ ok: true });
   } catch (e) {
     return NextResponse.json({ error: (e as Error).message }, { status: 400 });

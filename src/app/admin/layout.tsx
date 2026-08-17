@@ -10,7 +10,7 @@ export const metadata = {
  * admin login by the middleware AND here (defense in depth). The Google
  * session is verified server-side on every request via signed cookie. */
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
-  const user = getAdminUser();
+  const user = await getAdminUser();
   if (!user) {
     redirect("/admin/login");
   }

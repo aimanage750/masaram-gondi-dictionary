@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, Suspense, useEffect, useState } from "react";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Lock, ShieldAlert } from "lucide-react";
 
@@ -130,9 +131,9 @@ function LoginInner({
         )}
 
         <p className="mt-6 text-center">
-          <a href="/" className="text-xs font-medium text-terracotta-500 underline-offset-2 hover:underline">
+          <Link href="/" className="text-xs font-medium text-terracotta-500 underline-offset-2 hover:underline">
             ← Public website · सार्वजनिक साइट
-          </a>
+          </Link>
         </p>
       </div>
     </div>

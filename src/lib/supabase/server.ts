@@ -1,10 +1,10 @@
-import { createServerClient } from "@supabase/ssr";
+import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
 
-export function createServerSupabase() {
+export async function createServerSupabase() {
   if (!isSupabaseConfigured()) return null;
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   return createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -13,7 +13,7 @@ export function createServerSupabase() {
         getAll() {
           return cookieStore.getAll();
         },
-        setAll(list) {
+        setAll(list: { name: string; value: string; options?: CookieOptions }[]) {
           try {
             list.forEach(({ name, value, options }) =>
               cookieStore.set(name, value, options)

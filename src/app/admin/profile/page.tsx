@@ -10,8 +10,8 @@ const ROLE_LABEL: Record<string, string> = {
   reviewer: "Reviewer — contribution/report review",
 };
 
-export default function AdminProfilePage() {
-  const user = getAdminUser();
+export default async function AdminProfilePage() {
+  const user = await getAdminUser();
   if (!user) return null;
   return (
     <div className="mx-auto max-w-xl">

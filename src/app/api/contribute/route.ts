@@ -68,7 +68,7 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    assertCsrf(data.csrf);
+    await assertCsrf(data.csrf);
     for (const key of SCAN_FIELDS) {
       const value = data[key];
       if (value) rejectDangerous(value, key);

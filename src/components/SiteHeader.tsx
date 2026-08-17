@@ -65,7 +65,10 @@ export function SiteHeader() {
           </span>
         </Link>
 
-        <nav aria-label="Primary" className="hidden items-center gap-1 lg:flex">
+        {/* Keep the complete desktop navigation at xl and above. At smaller
+            desktop/tablet widths, icon-only links still crowded the brand and
+            could overflow the header; the accessible menu is used instead. */}
+        <nav aria-label="Primary" className="hidden items-center gap-1 xl:flex">
           {NAV.map((n) => {
             const on = active(n.href);
             const Icon = n.icon;
@@ -74,15 +77,15 @@ export function SiteHeader() {
                 key={n.href}
                 href={n.href}
                 aria-current={on ? "page" : undefined}
-                className={`inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-3 py-2 text-[13px] font-medium transition xl:px-3.5 xl:text-sm ${
+                className={`inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-3 py-2 text-[13px] font-medium transition 2xl:px-3.5 2xl:text-sm ${
                   on
                     ? "bg-terracotta-500 text-cream-50 shadow-card"
                     : "text-ink-800 hover:bg-cream-200 hover:text-forest-600"
                 }`}
               >
                 <Icon size={15} aria-hidden />
-                <span className="hidden xl:inline">{n.label}</span>
-                <span className="xl:hidden">{n.short ?? n.label}</span>
+                <span className="hidden 2xl:inline">{n.label}</span>
+                <span className="2xl:hidden">{n.short ?? n.label}</span>
               </Link>
             );
           })}
@@ -95,7 +98,7 @@ export function SiteHeader() {
           </Link>
         </nav>
 
-        <div className="flex items-center gap-1.5 lg:hidden">
+        <div className="flex items-center gap-1.5 xl:hidden">
           <ThemeToggle />
           <button
             type="button"
@@ -114,7 +117,7 @@ export function SiteHeader() {
         <nav
           id="mobile-menu"
           aria-label="Mobile"
-          className="border-t border-earth-500/10 bg-cream-100 px-4 pb-4 pt-2 lg:hidden"
+          className="border-t border-earth-500/10 bg-cream-100 px-4 pb-4 pt-2 xl:hidden"
         >
           <div className="grid grid-cols-2 gap-1.5">
             {NAV.map((n) => {

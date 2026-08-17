@@ -10,13 +10,13 @@ const COOKIE = "mgd_session";
 export async function getSessionUser(): Promise<SessionUser | null> {
   // Phase 9: new Google-OAuth admin session is honored everywhere the old
   // admin session was — existing admin APIs keep working unchanged.
-  const admin = getAdminSession();
+  const admin = await getAdminSession();
   if (admin) {
     return { id: `admin:${admin.email}`, email: admin.email, role: "admin", name: admin.name };
   }
 
   if (isSupabaseConfigured()) {
-    const sb = createServerSupabase();
+    const sb = await createServerSupabase();
     if (!sb) return null;
     const { data } = await sb.auth.getUser();
     if (!data.user?.email) return null;
@@ -33,7 +33,7 @@ export async function getSessionUser(): Promise<SessionUser | null> {
     };
   }
 
-  const token = cookies().get(COOKIE)?.value;
+  const token = (await cookies()).get(COOKIE)?.value;
   if (!token) return null;
   const email = verifySigned(token);
   if (!email) return null;
@@ -58,10 +58,10 @@ export const SESSION_COOKIE = COOKIE;
 
 /** Full admin profile for the Phase 9 panel: Google session first, then the
  * legacy local session (mapped to super_admin for backwards compatibility). */
-export function getAdminUser(): AdminUser | null {
-  const google = getAdminSession();
+export async function getAdminUser(): Promise<AdminUser | null> {
+  const google = await getAdminSession();
   if (google) return google;
-  const token = cookies().get(COOKIE)?.value;
+  const token = (await cookies()).get(COOKIE)?.value;
   const email = token ? verifySigned(token) : null;
   if (!email) return null;
   return { email, role: "super_admin", legacy: true };

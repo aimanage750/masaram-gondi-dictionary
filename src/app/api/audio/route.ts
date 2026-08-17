@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
 
   const form = await req.formData();
   try {
-    assertCsrf(String(form.get("csrf") ?? ""));
+    await assertCsrf(String(form.get("csrf") ?? ""));
   } catch (e) {
     return NextResponse.json({ error: (e as Error).message }, { status: 403 });
   }

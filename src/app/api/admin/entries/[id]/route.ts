@@ -14,8 +14,9 @@ const patchSchema = z.object({
   csrf: z.string().min(8),
 });
 
-export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
-  const user = getAdminUser();
+export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const user = await getAdminUser();
   if (!user || !can(user.role, "edit")) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
@@ -23,12 +24,12 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
   const parsed = patchSchema.safeParse(body);
   if (!parsed.success) return NextResponse.json({ error: "Invalid patch" }, { status: 400 });
   try {
-    assertCsrf(parsed.data.csrf);
+    await assertCsrf(parsed.data.csrf);
   } catch {
     return NextResponse.json({ error: "Invalid CSRF token" }, { status: 403 });
   }
 
-  const existing = await getEntry(params.id, true);
+  const existing = await getEntry(id, true);
   if (!existing) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
   const action =

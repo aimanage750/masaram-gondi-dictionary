@@ -63,8 +63,8 @@ export function clearAdminSessionCookie() {
 }
 
 /** Current admin from the HttpOnly cookie (never localStorage). */
-export function getAdminSession(): AdminUser | null {
-  const payload = decodeSession(cookies().get(ADMIN_COOKIE)?.value);
+export async function getAdminSession(): Promise<AdminUser | null> {
+  const payload = decodeSession((await cookies()).get(ADMIN_COOKIE)?.value);
   if (!payload) return null;
   return {
     email: payload.email,

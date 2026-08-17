@@ -60,7 +60,7 @@ export const metadata: Metadata = {
     title: "Masaram Gondi Script Dictionary",
     description:
       "Search Gondi words in Masaram Gondi script, Devanagari pronunciation, Hindi and English; translate, convert and learn the script. Preserving Our Language • Our Identity.",
-    url: "https://masaram-gondi-script-platform.vercel.app",
+    url: "https://masaram-gondi-dictionary.vercel.app",
     images: [
       {
         url: "/img/hero-landscape.jpg",
@@ -77,7 +77,7 @@ export const metadata: Metadata = {
       "Search Gondi words in Masaram Gondi script, Devanagari, Hindi and English. Preserving Our Language • Our Identity.",
     images: ["/img/hero-landscape.jpg"],
   },
-  metadataBase: new URL("https://masaram-gondi-script-platform.vercel.app"),
+  metadataBase: new URL("https://masaram-gondi-dictionary.vercel.app"),
 };
 
 export const viewport: Viewport = {

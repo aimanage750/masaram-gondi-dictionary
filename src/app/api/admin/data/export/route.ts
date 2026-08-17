@@ -5,7 +5,7 @@ import { listEntries } from "@/lib/data/store";
 
 /** Export the full dictionary as CSV (admin only). */
 export async function GET() {
-  const user = getAdminUser();
+  const user = await getAdminUser();
   if (!user) return new NextResponse("Forbidden", { status: 403 });
   const entries = await listEntries({ includeUnpublished: true });
   const rows = entries.map((e) => ({

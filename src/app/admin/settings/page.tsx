@@ -8,8 +8,8 @@ export const metadata = { title: "Admin · Settings" };
 
 /** Safe configuration display — booleans only. Secrets (OAuth secret,
  * Supabase service role key, session secret) are NEVER rendered. */
-export default function AdminSettingsPage() {
-  const user = getAdminUser();
+export default async function AdminSettingsPage() {
+  const user = await getAdminUser();
   const rows: { label: string; on: boolean; hint: string }[] = [
     {
       label: "Google OAuth (GOOGLE_CLIENT_ID / GOOGLE_CLIENT_SECRET)",

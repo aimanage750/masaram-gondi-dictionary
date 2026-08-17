@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
   }
   const body = await req.json().catch(() => ({}));
   try {
-    assertCsrf(body.csrf);
+    await assertCsrf(body.csrf);
   } catch (e) {
     return NextResponse.json({ error: (e as Error).message }, { status: 403 });
   }

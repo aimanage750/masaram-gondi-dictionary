@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
 
   const body = await req.json().catch(() => ({}));
   try {
-    assertCsrf(typeof body.csrf === "string" ? body.csrf : undefined);
+    await assertCsrf(typeof body.csrf === "string" ? body.csrf : undefined);
   } catch {
     return NextResponse.json({ error: "Invalid CSRF token" }, { status: 403 });
   }

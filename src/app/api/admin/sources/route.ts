@@ -7,7 +7,7 @@ import { addSource, listSources } from "@/lib/data/store";
 import type { SourceItem } from "@/lib/types";
 
 export async function GET() {
-  const user = getAdminUser();
+  const user = await getAdminUser();
   if (!user) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   try {
     return NextResponse.json({ sources: await listSources() });
@@ -32,7 +32,7 @@ const createSchema = z.object({
 });
 
 export async function POST(req: NextRequest) {
-  const user = getAdminUser();
+  const user = await getAdminUser();
   if (!user || !can(user.role, "edit")) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
@@ -43,7 +43,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: first?.message ?? "Invalid source" }, { status: 400 });
   }
   try {
-    assertCsrf(parsed.data.csrf);
+    await assertCsrf(parsed.data.csrf);
   } catch {
     return NextResponse.json({ error: "Invalid CSRF token" }, { status: 403 });
   }

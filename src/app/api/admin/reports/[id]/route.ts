@@ -25,8 +25,9 @@ const patchSchema = z.object({
   csrf: z.string().min(8),
 });
 
-export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
-  const user = getAdminUser();
+export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const user = await getAdminUser();
   if (!user || !can(user.role, "review")) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
@@ -34,13 +35,13 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
   const parsed = patchSchema.safeParse(body);
   if (!parsed.success) return NextResponse.json({ error: "Invalid patch" }, { status: 400 });
   try {
-    assertCsrf(parsed.data.csrf);
+    await assertCsrf(parsed.data.csrf);
   } catch {
     return NextResponse.json({ error: "Invalid CSRF token" }, { status: 403 });
   }
 
   const reports = await listReports();
-  const report = reports.find((r) => r.id === params.id);
+  const report = reports.find((r) => r.id === id);
   if (!report) return NextResponse.json({ error: "Report not found" }, { status: 404 });
 
   // Applying a correction touches live dictionary data — editor+ only, and

@@ -6,10 +6,11 @@ import { deleteEntry, getEntry, upsertEntry } from "@/lib/data/store";
 import { enrichRaw } from "@/lib/mapping/enrich";
 import { CATEGORY_META } from "@/data/raw-entries";
 
-export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   const user = await getSessionUser();
   if (!user || user.role !== "admin") return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-  const existing = await getEntry(params.id, true);
+  const existing = await getEntry(id, true);
   if (!existing) return NextResponse.json({ error: "Not found" }, { status: 404 });
   const body = await req.json().catch(() => ({}));
   const parsed = entrySchema.safeParse(body);
@@ -22,7 +23,7 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
     return NextResponse.json({ error: msg }, { status: 400 });
   }
   try {
-    assertCsrf(body.csrf);
+    await assertCsrf(body.csrf);
     rejectDangerous(parsed.data.gondi_pronunciation, "Gondi");
   } catch (e) {
     return NextResponse.json({ error: (e as Error).message }, { status: 403 });
@@ -58,17 +59,18 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
   return NextResponse.json({ id: entry.id });
 }
 
-export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   const user = await getSessionUser();
   if (!user || user.role !== "admin") return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   const body = await req.json().catch(() => ({}));
   try {
-    assertCsrf(body.csrf);
+    await assertCsrf(body.csrf);
   } catch (e) {
     return NextResponse.json({ error: (e as Error).message }, { status: 403 });
   }
   try {
-    await deleteEntry(params.id, user.email);
+    await deleteEntry(id, user.email);
   } catch (e) {
     return NextResponse.json({ error: (e as Error).message || "डिलीट नहीं हुआ" }, { status: 500 });
   }
